@@ -1,0 +1,32 @@
+{
+    "name": "bizley/quill",
+    "description": "Quill editor implementation for Yii 2.",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "yii 2",
+        "quill",
+        "wysiwyg",
+        "widget",
+        "editor"
+    ],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Pawel Bizley Brzozowski",
+            "email": "pb@human-device.com"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/bizley-code/yii2-quill"
+    },
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "bower-asset/quill": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "bizley\\quill\\": ""
+        }
+    }
+}
