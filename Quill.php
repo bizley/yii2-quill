@@ -25,10 +25,10 @@ use yii\widgets\InputWidget;
  * Use it as an active field:
  * <?= $form->field($model, $attribute)->widget(bizley\quill\Quill::className(), []) ?>
  * or as a standalone widget:
- * <?= bizley\quill\Quill::widget([]) ?>
+ * <?= bizley\quill\Quill::widget(['name' => 'editor']) ?>
  * 
  * Default parameters are:
- * 'theme' => 'snow' adds quill.snow.css instead quill.base.css
+ * 'theme' => 'bootstrap' adds Bootstrap theme
  * 'toolbar' => 'full' adds full toolbar
  * 
  * See the documentation for more details.
@@ -40,9 +40,12 @@ class Quill extends InputWidget
      * @var string theme name.
      * See http://quilljs.com/docs/themes/ for more info.
      * You can set this parameter here or use 'configs' array.
-     * Set it to false or null to get base theme.
+     * Set it to 'snow' to get 'snow' theme.
+     * Set it to false or null to get 'base' theme.
+     * For special Bootstrap theme (not a part of Quill itself) set it to 
+     * 'bootstrap'.
      */
-    public $theme = 'snow';
+    public $theme = 'bootstrap';
     
     /**
      * @var string|array toolbar configuration.
@@ -62,6 +65,7 @@ class Quill extends InputWidget
     public static $autoIdPrefix = 'quill-';
     
     protected $_css;
+    protected $_fieldId;
 
     /**
      * @inheritdoc
@@ -99,8 +103,13 @@ class Quill extends InputWidget
                 throw new InvalidConfigException('The "theme" property must be a string!');
             }
             
-            $this->configs['theme'] = $this->theme;
-            if ($this->theme == 'snow') {
+            if ($this->theme == 'bootstrap') {
+                $this->configs['theme'] = 'snow';
+            }
+            else {
+                $this->configs['theme'] = $this->theme;
+            }
+            if (in_array($this->theme, ['snow', 'bootstrap'])) {
                 $this->_css = 'snow';
             }
         }
@@ -136,9 +145,6 @@ class Quill extends InputWidget
      */
     public function initOptions()
     {
-        if (!is_array($this->options)) {
-            $this->options = [];
-        }
         if (empty($this->options['class'])) {
             $this->options['class'] = 'editor';
         }
@@ -147,6 +153,7 @@ class Quill extends InputWidget
             $classes[] = 'editor';
             $this->options['class'] = implode(' ', array_unique($classes));
         }
+        $this->_fieldId = $this->options['id'];
         $this->options['id'] = 'editor-' . $this->id;
     }
 
@@ -155,15 +162,41 @@ class Quill extends InputWidget
      */
     public function run()
     {
+        $editor = '';
+        
+        if ($this->theme == 'bootstrap') {
+            $editor .= Html::beginTag('div', ['class' => 'panel panel-default']);
+        }
+        
         if ($this->hasModel()) {
-            $editor = Html::activeHiddenInput($this->model, $this->attribute);
+            $editor .= Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->_fieldId]);
         }
         else {
-            $editor = Html::hiddenInput($this->name, $this->value);
+            $editor .= Html::hiddenInput($this->name, $this->value, ['id' => $this->_fieldId]);
+        }
+        
+        if ($this->theme == 'bootstrap') {
+            $editor .= Html::beginTag('div', ['class' => 'panel-body', 'style' => 'padding:0; border-bottom:1px solid #ccc']);
         }
         
         $editor .= $this->addToolbar();
-        $editor .= Html::tag('div', $this->model->{$this->attribute}, $this->options);
+        
+        if ($this->theme == 'bootstrap') {
+            $editor .= Html::endTag('div');
+            $editor .= Html::beginTag('div', ['class' => 'panel-body']);
+        }
+        
+        if ($this->hasModel()) {
+            $editor .= Html::tag('div', $this->model->{$this->attribute}, $this->options);
+        }
+        else {
+            $editor .= Html::tag('div', $this->value, $this->options);
+        }        
+        
+        if ($this->theme == 'bootstrap') {
+            $editor .= Html::endTag('div');
+            $editor .= Html::endTag('div');
+        }
         
         $this->registerClientScript();
         
@@ -180,7 +213,7 @@ class Quill extends InputWidget
         $asset->theme = $this->_css;
         
         $configs = !empty($this->configs) ? Json::encode($this->configs) : '';
-        $view->registerJs("var editor = new Quill('#editor-{$this->id}', $configs);");
+        $view->registerJs("new Quill('#editor-{$this->id}', $configs).on('text-change', function() { jQuery('#{$this->_fieldId}').val(this.getHTML()); });");
     }
     
     /**
