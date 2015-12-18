@@ -1,13 +1,23 @@
 <?php
 
+/**
+ * @author Paweł Bizley Brzozowski
+ * @version 1.0
+ * @license Apache 2.0
+ * https://github.com/bizley-code/yii2-quill
+ * 
+ * Quill can be found at
+ * http://quilljs.com/
+ * https://github.com/quilljs/quill/
+ */
+
 namespace bizley\quill;
 
 use yii\web\AssetBundle;
 
 /**
- * Quill Assets
+ * Quill assets.
  * 
- * @author Paweł Bizley Brzozowski <pb@human-device.com>
  */
 class Asset extends AssetBundle
 {
@@ -15,7 +25,7 @@ class Asset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@vendor/bizley/quill/quill/dist';
+    public $sourcePath = '@bower/quill/dist';
     
     /**
      * @inheritdoc

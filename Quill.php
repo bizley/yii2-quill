@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * @author Paweł Bizley Brzozowski
+ * @version 1.0
+ * @license Apache 2.0
+ * https://github.com/bizley-code/yii2-quill
+ * 
+ * Quill can be found at
+ * http://quilljs.com/
+ * https://github.com/quilljs/quill/
+ */
+
 namespace bizley\quill;
 
 use Yii;
@@ -8,14 +19,44 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\widgets\InputWidget;
 
-
+/**
+ * Quill editor implementation for Yii 2.
+ * 
+ * Use it as an active field:
+ * <?= $form->field($model, $attribute)->widget(bizley\quill\Quill::className(), []) ?>
+ * or as a standalone widget:
+ * <?= bizley\quill\Quill::widget([]) ?>
+ * 
+ * Default parameters are:
+ * 'theme' => 'snow' adds quill.snow.css instead quill.base.css
+ * 'toolbar' => 'full' adds full toolbar
+ * 
+ * See the documentation for more details.
+ */
 class Quill extends InputWidget
 {
 
+    /**
+     * @var string theme name.
+     * See http://quilljs.com/docs/themes/ for more info.
+     * You can set this parameter here or use 'configs' array.
+     * Set it to false or null to get base theme.
+     */
     public $theme = 'snow';
     
+    /**
+     * @var string|array toolbar configuration.
+     * You can set it to 'full' to get full default toolbar as at the home page 
+     * of http://quilljs.com or set it to 'basic' to get only few buttons.
+     * In this is an array every array element should be a button or 
+     * group of buttons definition.
+     * See the documentation for more details.
+     */
     public $toolbar = 'full';
     
+    /**
+     * @var array Quill configuration as in http://quilljs.com/docs/configuration/
+     */
     public $configs = [];
     
     public static $autoIdPrefix = 'quill-';
@@ -33,6 +74,10 @@ class Quill extends InputWidget
         $this->initOptions();
     }
     
+    /**
+     * Initiates configs array.
+     * @throws InvalidConfigException
+     */
     public function initConfigs()
     {
         if (!is_array($this->configs)) {
@@ -43,6 +88,10 @@ class Quill extends InputWidget
         $this->initToolbar();
     }
     
+    /**
+     * Initiates theme option.
+     * @throws InvalidConfigException
+     */
     public function initTheme()
     {
         if (!empty($this->theme)) {
@@ -60,6 +109,10 @@ class Quill extends InputWidget
         }
     }
     
+    /**
+     * Initiates toolbar option.
+     * @throws InvalidConfigException
+     */
     public function initToolbar()
     {
         if (!empty($this->toolbar)) {
@@ -78,6 +131,9 @@ class Quill extends InputWidget
         }
     }
     
+    /**
+     * Initiates widget HTML options.
+     */
     public function initOptions()
     {
         if (!is_array($this->options)) {
@@ -115,7 +171,7 @@ class Quill extends InputWidget
     }
     
     /**
-     * Register widget asset.
+     * Registers widget assets.
      */
     public function registerClientScript()
     {
@@ -127,6 +183,9 @@ class Quill extends InputWidget
         $view->registerJs("var editor = new Quill('#editor-{$this->id}', $configs);");
     }
     
+    /**
+     * Sets toolbar to full.
+     */
     public function setFullToolbar()
     {
         $this->toolbar = [
@@ -138,6 +197,9 @@ class Quill extends InputWidget
         ];
     }
     
+    /**
+     * Sets toolbar to basic.
+     */
     public function setBasicToolbar()
     {
         $this->toolbar = [
@@ -147,6 +209,10 @@ class Quill extends InputWidget
         ];
     }
     
+    /**
+     * Adds toolbar based on the toolbar parameter.
+     * @return string
+     */
     public function addToolbar()
     {
         $toolbar = '';
@@ -179,6 +245,11 @@ class Quill extends InputWidget
         return $toolbar;
     }
     
+    /**
+     * Adds group of buttons to the toolbar.
+     * @param array $group buttons definitions.
+     * @return string
+     */
     public function addGroup($group)
     {
         $html = Html::beginTag('span', ['class' => 'ql-format-group']);
@@ -192,6 +263,12 @@ class Quill extends InputWidget
         return $html;
     }
     
+    /**
+     * Adds button to the toolbar.
+     * Required modules are automatically added.
+     * @param string $button button definition.
+     * @return string
+     */
     public function addButton($button)
     {
         switch ($button) {
@@ -260,6 +337,10 @@ class Quill extends InputWidget
         return $html;
     }
     
+    /**
+     * Returns default list of colours.
+     * @return array
+     */
     public function getColors()
     {
         return [
@@ -301,6 +382,10 @@ class Quill extends InputWidget
         ];
     }
     
+    /**
+     * Ensures the required modules are added in configs.
+     * @param string $name
+     */
     public function makeSureThereIsModule($name)
     {
         if (isset($this->configs['modules'])) {
