@@ -13,6 +13,17 @@ You can find Quill at http://quilljs.com
 - [GitHub](https://github.com/quilljs/quill)
 
 ## yii2-quill
+
+### Installation
+
+Easiest way to install this extension is through the [Composer](https://getcomposer.org).  
+Add in your ```composer.json```:  
+```"bizley/quill": "*"```  
+or run console command:  
+```php composer.phar require bizley/quill "*"```
+
+### Usage
+
 Use it as an active field extension  
 ```<?= $form->field($model, $attribute)->widget(bizley\quill\Quill::className(), []) ?>```
 
