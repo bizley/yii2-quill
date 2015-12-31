@@ -35,7 +35,7 @@ or as a standalone widget
   ```false``` or ```null``` for Quill's default theme with quill.base.css,  
   ```'snow'``` for Quill's snow theme with quill.snow.css,  
   ```'bootstrap'``` for snow theme with editor wrapped in [Bootstrap's panel](http://getbootstrap.com/components/#panels)  
-  You can set theme in ```configs``` array instead but this is the only way to set ```'bootstrap'``` theme.
+  You can set theme in ```configs``` array instead but this is the only way to set ```'bootstrap'``` theme.  
   See [Quill's documentation for themes](http://quilljs.com/docs/themes).
   
 - **toolbar** *string* or *array* default ```'full'```  
@@ -44,12 +44,19 @@ or as a standalone widget
   ```'full'``` for full Quill's toolbar as seen [here](http://quilljs.com),  
   ```'basic'``` for few basic toolbar options,  
   *anything else* for single button (see below).  
-  In case of *array*:
-  *string element* for single button (see below),
+  In case of *array*:  
+  *string element* for single button (see below),  
   *array element* for buttons grouped together - every element of this array should be *string* (a single button).
   
 - **configs** *array* default ```[]```  
   Array of Quill's configuration. This is the equivalent of [Quill's configs variable](http://quilljs.com/docs/configuration)
+
+- **options** *array* default ```[]```  
+  Array of HTML options passed to the editor's div.
+
+- **js** *string* default ```null```  
+  Additional js to be called with the editor.
+  Use placeholder ```{quill}``` to get the current editor object variable.
   
 ### Toolbar
 Quill allows you to add your own HTML toolbar for the editor. This is very flexible solution but in most cases you just need to 

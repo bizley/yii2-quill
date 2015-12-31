@@ -2,9 +2,9 @@
 
 /**
  * @author Paweł Bizley Brzozowski
- * @version 1.0
+ * @version 1.1
  * @license Apache 2.0
- * https://github.com/bizley-code/yii2-quill
+ * https://github.com/bizley/yii2-quill
  * 
  * Quill can be found at
  * http://quilljs.com/
@@ -41,6 +41,11 @@ class Asset extends AssetBundle
      * @var string editor theme
      */
     public $theme;
+    
+    /**
+     * @inheritdoc
+     */
+    public $depends = ['yii\web\JqueryAsset'];
     
     /**
      * Register css file based on theme.

@@ -2,9 +2,9 @@
 
 /**
  * @author Paweł Bizley Brzozowski
- * @version 1.0
+ * @version 1.1
  * @license Apache 2.0
- * https://github.com/bizley-code/yii2-quill
+ * https://github.com/bizley/yii2-quill
  * 
  * Quill can be found at
  * http://quilljs.com/
@@ -38,7 +38,7 @@ class Quill extends InputWidget
 
     /**
      * @var string theme name.
-     * See http://quilljs.com/docs/themes/ for more info.
+     * See http://quilljs.com/docs/themes for more info.
      * You can set this parameter here or use 'configs' array.
      * Set it to 'snow' to get 'snow' theme.
      * Set it to false or null to get 'base' theme.
@@ -58,9 +58,16 @@ class Quill extends InputWidget
     public $toolbar = 'full';
     
     /**
-     * @var array Quill configuration as in http://quilljs.com/docs/configuration/
+     * @var array Quill configuration as in http://quilljs.com/docs/configuration
      */
     public $configs = [];
+    
+    /**
+     * @var string Additional js to be called with the editor.
+     * Use placeholder {quill} to get the current editor object variable.
+     * @since 1.1
+     */
+    public $js;
     
     public static $autoIdPrefix = 'quill-';
     
@@ -86,6 +93,9 @@ class Quill extends InputWidget
     {
         if (!is_array($this->configs)) {
             throw new InvalidConfigException('The "configs" property must be an array!');
+        }
+        if (!empty($this->js) && !is_string($this->js)) {
+            throw new InvalidConfigException('The "js" property must be a string!');
         }
         
         $this->initTheme();
@@ -213,7 +223,13 @@ class Quill extends InputWidget
         $asset->theme = $this->_css;
         
         $configs = !empty($this->configs) ? Json::encode($this->configs) : '';
-        $view->registerJs("new Quill('#editor-{$this->id}', $configs).on('text-change', function() { jQuery('#{$this->_fieldId}').val(this.getHTML()); });");
+        $var = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
+        $js = "var $var = new Quill('#editor-{$this->id}', $configs);";
+        $js .= "$var.on('text-change', function() { jQuery('#{$this->_fieldId}').val(this.getHTML()); });";
+        if (!empty($this->js)) {
+            $js .= str_replace('{quill}', $var, $this->js);
+        }
+        $view->registerJs($js);
     }
     
     /**
