@@ -325,7 +325,10 @@ class Quill extends InputWidget
      * Initiates configs array.
      * @deprecated 1.2.0
      */
-    public function initConfigs();
+    public function initConfigs()
+    {
+        return;
+    }
     
     /**
      * Initiates toolbar option.
