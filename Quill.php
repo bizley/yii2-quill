@@ -1,19 +1,7 @@
 <?php
 
-/**
- * @author Paweł Bizley Brzozowski
- * @version 1.1
- * @license Apache 2.0
- * https://github.com/bizley/yii2-quill
- * 
- * Quill can be found at
- * http://quilljs.com/
- * https://github.com/quilljs/quill/
- */
-
 namespace bizley\quill;
 
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -32,10 +20,24 @@ use yii\widgets\InputWidget;
  * 'toolbar' => 'full' adds full toolbar
  * 
  * See the documentation for more details.
+ * 
+ * @author Paweł Bizley Brzozowski
+ * @version 1.2.0
+ * @license Apache 2.0
+ * https://github.com/bizley/yii2-quill
+ * 
+ * Quill can be found at
+ * http://quilljs.com/
+ * https://github.com/quilljs/quill/
+ * 
+ * @property QuillToolbar $quillToolbar
  */
 class Quill extends InputWidget
 {
-
+    const THEME_BOOT = 'bootstrap';
+    const THEME_SNOW = 'snow';
+    const THEME_BASE = 'base';
+    
     /**
      * @var string theme name.
      * See http://quilljs.com/docs/themes for more info.
@@ -45,7 +47,10 @@ class Quill extends InputWidget
      * For special Bootstrap theme (not a part of Quill itself) set it to 
      * 'bootstrap'.
      */
-    public $theme = 'bootstrap';
+    public $theme = self::THEME_BOOT;
+    
+    const TOOLBAR_FULL = 'full';
+    const TOOLBAR_BASIC = 'basic';
     
     /**
      * @var string|array toolbar configuration.
@@ -55,7 +60,7 @@ class Quill extends InputWidget
      * group of buttons definition.
      * See the documentation for more details.
      */
-    public $toolbar = 'full';
+    public $toolbar = self::TOOLBAR_FULL;
     
     /**
      * @var array Quill configuration as in http://quilljs.com/docs/configuration
@@ -63,33 +68,63 @@ class Quill extends InputWidget
     public $configs = [];
     
     /**
-     * @var string Additional js to be called with the editor.
+     * @var string additional js to be called with the editor.
      * Use placeholder {quill} to get the current editor object variable.
      * @since 1.1
      */
     public $js;
     
+    /**
+     * @inheritdoc
+     */
     public static $autoIdPrefix = 'quill-';
     
+    /**
+     * @var string selected css mode.
+     */
     protected $_css;
+    
+    /**
+     * @var string ID of the editor.
+     */
     protected $_fieldId;
+    
+    /**
+     * @var QuillToolbar
+     */
+    protected $_quillToolbar;
 
+    /**
+     * Ensures the required module is added in configs.
+     * @param string $name
+     * @since 1.2.0
+     */
+    public function addModule($name)
+    {
+        if (!isset($this->configs['modules'])) {
+            $this->configs['modules'] = [];
+        }
+        if (!isset($this->configs['modules'][$name])) {
+            $this->configs['modules'][$name] = true;
+        }
+    }
+    
+    /**
+     * Adds modules dependency.
+     */
+    public function addModules()
+    {
+        if ($this->quillToolbar) {
+            foreach ($this->quillToolbar->getModules() as $module) {
+                $this->addModule($module);
+            }
+        }
+    }
+    
     /**
      * @inheritdoc
      */
     public function init()
-    {
-        parent::init();
-
-        $this->initConfigs();
-        $this->initOptions();
-    }
-    
-    /**
-     * Initiates configs array.
-     * @throws InvalidConfigException
-     */
-    public function initConfigs()
     {
         if (!is_array($this->configs)) {
             throw new InvalidConfigException('The "configs" property must be an array!');
@@ -97,68 +132,43 @@ class Quill extends InputWidget
         if (!empty($this->js) && !is_string($this->js)) {
             throw new InvalidConfigException('The "js" property must be a string!');
         }
-        
+        parent::init();
         $this->initTheme();
-        $this->initToolbar();
+        $this->setQuillToolbar($this->toolbar);
+        $this->initOptions();
     }
     
     /**
      * Initiates theme option.
      * @throws InvalidConfigException
      */
-    public function initTheme()
+    protected function initTheme()
     {
         if (!empty($this->theme)) {
             if (!is_string($this->theme)) {
                 throw new InvalidConfigException('The "theme" property must be a string!');
             }
-            
-            if ($this->theme == 'bootstrap') {
-                $this->configs['theme'] = 'snow';
-            }
-            else {
+            if ($this->theme == self::THEME_BOOT) {
+                $this->configs['theme'] = self::THEME_SNOW;
+            } else {
                 $this->configs['theme'] = $this->theme;
             }
-            if (in_array($this->theme, ['snow', 'bootstrap'])) {
-                $this->_css = 'snow';
+            if (in_array($this->theme, [self::THEME_SNOW, self::THEME_BOOT])) {
+                $this->_css = self::THEME_SNOW;
             }
-        }
-        else {
-            $this->_css = 'base';
-        }
-    }
-    
-    /**
-     * Initiates toolbar option.
-     * @throws InvalidConfigException
-     */
-    public function initToolbar()
-    {
-        if (!empty($this->toolbar)) {
-            if (!is_string($this->toolbar) && !is_array($this->toolbar)) {
-                throw new InvalidConfigException('The "toolbar" property must be a string or an array!');
-            }
-            
-            switch ($this->toolbar) {
-                case 'full':
-                    $this->setFullToolbar();
-                    break;
-                case 'basic':
-                    $this->setBasicToolbar();
-                    break;
-            }
+        } else {
+            $this->_css = self::THEME_BASE;
         }
     }
     
     /**
      * Initiates widget HTML options.
      */
-    public function initOptions()
+    protected function initOptions()
     {
         if (empty($this->options['class'])) {
             $this->options['class'] = 'editor';
-        }
-        else {
+        } else {
             $classes = explode(' ', $this->options['class']);
             $classes[] = 'editor';
             $this->options['class'] = implode(' ', array_unique($classes));
@@ -172,45 +182,10 @@ class Quill extends InputWidget
      */
     public function run()
     {
-        $editor = '';
-        
-        if ($this->theme == 'bootstrap') {
-            $editor .= Html::beginTag('div', ['class' => 'panel panel-default']);
-        }
-        
-        if ($this->hasModel()) {
-            $editor .= Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->_fieldId]);
-        }
-        else {
-            $editor .= Html::hiddenInput($this->name, $this->value, ['id' => $this->_fieldId]);
-        }
-        
-        if ($this->theme == 'bootstrap') {
-            $editor .= Html::beginTag('div', ['class' => 'panel-body', 'style' => 'padding:0; border-bottom:1px solid #ccc']);
-        }
-        
-        $editor .= $this->addToolbar();
-        
-        if ($this->theme == 'bootstrap') {
-            $editor .= Html::endTag('div');
-            $editor .= Html::beginTag('div', ['class' => 'panel-body']);
-        }
-        
-        if ($this->hasModel()) {
-            $editor .= Html::tag('div', $this->model->{$this->attribute}, $this->options);
-        }
-        else {
-            $editor .= Html::tag('div', $this->value, $this->options);
-        }        
-        
-        if ($this->theme == 'bootstrap') {
-            $editor .= Html::endTag('div');
-            $editor .= Html::endTag('div');
-        }
-        
+        $toolbar = $this->renderToolbar();
+        $this->addModules();
         $this->registerClientScript();
-        
-        return $editor;
+        return $this->renderEditor($toolbar);
     }
     
     /**
@@ -233,40 +208,49 @@ class Quill extends InputWidget
     }
     
     /**
-     * Sets toolbar to full.
-     */
-    public function setFullToolbar()
-    {
-        $this->toolbar = [
-            ['font', 'size'],
-            ['b', '|', 'i', '|', 'u', '|', 's'],
-            ['textColor', '|', 'backColor'],
-            ['ol', '|', 'ul', '|', 'alignment'],
-            ['link', '|', 'image']
-        ];
-    }
-    
-    /**
-     * Sets toolbar to basic.
-     */
-    public function setBasicToolbar()
-    {
-        $this->toolbar = [
-            ['b', '|', 'i', '|', 'u', '|', 's'],
-            ['ol', '|', 'ul', '|', 'alignment'],
-            ['link']
-        ];
-    }
-    
-    /**
-     * Adds toolbar based on the toolbar parameter.
+     * Renders editor.
+     * @property string $toolbar
      * @return string
+     * @since 1.2.0
      */
-    public function addToolbar()
+    public function renderEditor($toolbar)
     {
-        $toolbar = '';
-        
-        if (!empty($this->toolbar)) {
+        $bootstrap = $this->theme == self::THEME_BOOT;
+        $editor = '';
+        if ($bootstrap) {
+            $editor .= Html::beginTag('div', ['class' => 'panel panel-default']);
+        }
+        if ($this->hasModel()) {
+            $editor .= Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->_fieldId]);
+        } else {
+            $editor .= Html::hiddenInput($this->name, $this->value, ['id' => $this->_fieldId]);
+        }
+        if ($bootstrap) {
+            $editor .= Html::beginTag('div', ['class' => 'panel-body', 'style' => 'padding:0; border-bottom:1px solid #ccc']);
+        }
+        $editor .= $toolbar;
+        if ($bootstrap) {
+            $editor .= Html::endTag('div') . Html::beginTag('div', ['class' => 'panel-body']);
+        }
+        if ($this->hasModel()) {
+            $editor .= Html::tag('div', $this->model->{$this->attribute}, $this->options);
+        } else {
+            $editor .= Html::tag('div', $this->value, $this->options);
+        }        
+        if ($bootstrap) {
+            $editor .= Html::endTag('div') . Html::endTag('div');
+        }
+        return $editor;
+    }
+    
+    /**
+     * Renders toolbar.
+     * @return string
+     * @since 1.2.0
+     */
+    public function renderToolbar()
+    {
+        if (!empty($this->quillToolbar->getElements())) {
             $toolbarId = 'toolbar-' . $this->id;
             
             if (empty($this->configs['modules'])) {
@@ -274,177 +258,113 @@ class Quill extends InputWidget
             }
             $this->configs['modules']['toolbar'] = ['container' => '#' . $toolbarId];
             
-            $toolbar .= Html::beginTag('div', ['id' => $toolbarId, 'class' => 'toolbar']);
-            if (is_string($this->toolbar)) {
-                $toolbar = $this->toolbar;
-            }
-            elseif (is_array($this->toolbar)) {
-                foreach ($this->toolbar as $bar) {
-                    if (is_string($bar)) {
-                        $toolbar .= $this->addButton($bar);
-                    }
-                    elseif (is_array($bar)) {
-                        $toolbar .= $this->addGroup($bar);
-                    }
-                }
-            }
-            $toolbar .= Html::endTag('div');
+            return $this->quillToolbar->render($toolbarId);
         }
-        
-        return $toolbar;
+        return null;
+    }
+    
+    /**
+     * Returns Quill toolbar object.
+     * @return QuillToolbar
+     * @since 1.2.0
+     */
+    public function getQuillToolbar()
+    {
+        return $this->_quillToolbar;
+    }
+    
+    /**
+     * Sets Quill toolbar object.
+     * @param string|array|null $toolbarConfig configuration
+     * @since 1.2.0
+     */
+    public function setQuillToolbar($toolbarConfig)
+    {
+        $this->_quillToolbar = new QuillToolbar($toolbarConfig);
+    }
+    
+    /**
+     * Deprecated since 1.2.0
+     * -------------------------------------------------------------------------
+     */
+    
+    /**
+     * Adds button to the toolbar.
+     * @deprecated 1.2.0 use getQuillToolbar()->renderButton() instead.
+     */
+    public function addButton($element)
+    {
+        return $this->quillToolbar->renderButton($element);
     }
     
     /**
      * Adds group of buttons to the toolbar.
-     * @param array $group buttons definitions.
-     * @return string
+     * @deprecated 1.2.0 use getQuillToolbar()->renderGroup() instead.
      */
-    public function addGroup($group)
+    public function addGroup($elements)
     {
-        $html = Html::beginTag('span', ['class' => 'ql-format-group']);
-        foreach ($group as $button) {
-            if (is_string($button)) {
-                $html .= $this->addButton($button);
-            }
-        }
-        $html .= Html::endTag('span');
-        
-        return $html;
+        return $this->quillToolbar->renderGroup($elements);
     }
     
     /**
-     * Adds button to the toolbar.
-     * Required modules are automatically added.
-     * @param string $button button definition.
-     * @return string
+     * Adds toolbar based on the toolbar parameter.
+     * @deprecated 1.2.0 use renderToolbar() instead.
      */
-    public function addButton($button)
+    public function addToolbar()
     {
-        switch ($button) {
-            case '|':
-                $html = Html::tag('span', '', ['class' => 'ql-format-separator']);
-                break;
-            case 'b':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Bold'), 'class' => 'ql-format-button ql-bold']);
-                break;
-            case 'i':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Italic'), 'class' => 'ql-format-button ql-italic']);
-                break;
-            case 'u':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Underline'), 'class' => 'ql-format-button ql-underline']);
-                break;
-            case 's':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Strikethrough'), 'class' => 'ql-format-button ql-strike']);
-                break;
-            case 'font':
-                $html = Html::dropDownList('', 'sans-serif', [
-                                'sans-serif' => 'Sans Serif',
-                                'serif'      => 'Serif',
-                                'monospace'  => 'Monospace',
-                            ], ['title' => Yii::t('app', 'Font'), 'class' => 'ql-font']);
-                break;
-            case 'size':
-                $html = Html::dropDownList('', '13px', [
-                                '10px' => Yii::t('app', 'Small'),
-                                '13px' => Yii::t('app', 'Normal'),
-                                '18px' => Yii::t('app', 'Large'),
-                                '32px' => Yii::t('app', 'Huge'),
-                            ], ['title' => Yii::t('app', 'Size'), 'class' => 'ql-size']);
-                break;
-            case 'textColor':
-                $html = Html::dropDownList('', 'rgb(0, 0, 0)', $this->getColors(), ['title' => Yii::t('app', 'Text Color'), 'class' => 'ql-color']);
-                break;
-            case 'backColor':
-                $html = Html::dropDownList('', 'rgb(0, 0, 0)', $this->getColors(), ['title' => Yii::t('app', 'Background Color'), 'class' => 'ql-background']);
-                break;
-            case 'ol':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'List'), 'class' => 'ql-format-button ql-list']);
-                break;
-            case 'ul':
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Bullet'), 'class' => 'ql-format-button ql-bullet']);
-                break;
-            case 'alignment':
-                $html = Html::dropDownList('', 'left', [
-                                'left' => '',
-                                'center' => '',
-                                'right' => '',
-                                'justify' => '',
-                            ], ['title' => Yii::t('app', 'Text Alignment'), 'class' => 'ql-align']);
-                break;
-            case 'link':
-                $this->makeSureThereIsModule('link-tooltip');
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Link'), 'class' => 'ql-format-button ql-link']);
-                break;
-            case 'image':
-                $this->makeSureThereIsModule('image-tooltip');
-                $html = Html::tag('span', '', ['title' => Yii::t('app', 'Image'), 'class' => 'ql-format-button ql-image']);
-                break;
-            default:
-                $html = $button;
-        }
-        
-        return $html;
+        return $this->renderToolbar();
     }
     
     /**
      * Returns default list of colours.
-     * @return array
+     * @deprecated 1.2.0 use getQuillToolbar()->getColors() instead.
      */
     public function getColors()
     {
-        return [
-            'rgb(0, 0, 0)' => '',
-            'rgb(230, 0, 0)' => '',
-            'rgb(255, 153, 0)' => '',
-            'rgb(255, 255, 0)' => '',
-            'rgb(0, 138, 0)' => '',
-            'rgb(0, 102, 204)' => '',
-            'rgb(153, 51, 255)' => '',
-            'rgb(255, 255, 255)' => '',
-            'rgb(250, 204, 204)' => '',
-            'rgb(255, 235, 204)' => '',
-            'rgb(255, 255, 204)' => '',
-            'rgb(204, 232, 204)' => '',
-            'rgb(204, 224, 245)' => '',
-            'rgb(235, 214, 255)' => '',
-            'rgb(187, 187, 187)' => '',
-            'rgb(240, 102, 102)' => '',
-            'rgb(255, 194, 102)' => '',
-            'rgb(255, 255, 102)' => '',
-            'rgb(102, 185, 102)' => '',
-            'rgb(102, 163, 224)' => '',
-            'rgb(194, 133, 255)' => '',
-            'rgb(136, 136, 136)' => '',
-            'rgb(161, 0, 0)' => '',
-            'rgb(178, 107, 0)' => '',
-            'rgb(178, 178, 0)' => '',
-            'rgb(0, 97, 0)' => '',
-            'rgb(0, 71, 178)' => '',
-            'rgb(107, 36, 178)' => '',
-            'rgb(68, 68, 68)' => '',
-            'rgb(92, 0, 0)' => '',
-            'rgb(102, 61, 0)' => '',
-            'rgb(102, 102, 0)' => '',
-            'rgb(0, 55, 0)' => '',
-            'rgb(0, 41, 102)' => '',
-            'rgb(61, 20, 102)' => '',
-        ];
+        return $this->quillToolbar->getColors();
+    }
+    
+    /**
+     * Initiates configs array.
+     * @deprecated 1.2.0
+     */
+    public function initConfigs();
+    
+    /**
+     * Initiates toolbar option.
+     * @deprecated 1.2.0 use setQuillToolbar() instead.
+     */
+    public function initToolbar()
+    {
+        $this->setQuillToolbar($this->toolbar);
     }
     
     /**
      * Ensures the required modules are added in configs.
-     * @param string $name
+     * @deprecated 1.2.0 use addModule() instead.
      */
     public function makeSureThereIsModule($name)
     {
-        if (isset($this->configs['modules'])) {
-            if (!isset($this->configs['modules'][$name])) {
-                $this->configs['modules'][$name] = true;
-            }
-        }
-        else {
-            $this->configs['modules'] = [];
-            $this->configs['modules'][$name] = true;
-        }
+        return $this->addModule($name);
+    }
+    
+    /**
+     * Sets toolbar to full.
+     * @deprecated 1.2.0 use setQuillToolbar('full') 
+     * or getQuillToolbar()->prepareFullToolbar() instead.
+     */
+    public function setFullToolbar()
+    {
+        return $this->quillToolbar->prepareFullToolbar();
+    }
+    
+    /**
+     * Sets toolbar to basic.
+     * @deprecated 1.2.0 use setQuillToolbar('basic') 
+     * or getQuillToolbar()->prepareBasicToolbar() instead.
+     */
+    public function setBasicToolbar()
+    {
+        return $this->quillToolbar->prepareBasicToolbar();
     }
 }

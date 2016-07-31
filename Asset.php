@@ -1,16 +1,5 @@
 <?php
 
-/**
- * @author Paweł Bizley Brzozowski
- * @version 1.1
- * @license Apache 2.0
- * https://github.com/bizley/yii2-quill
- * 
- * Quill can be found at
- * http://quilljs.com/
- * https://github.com/quilljs/quill/
- */
-
 namespace bizley\quill;
 
 use yii\web\AssetBundle;
@@ -18,10 +7,17 @@ use yii\web\AssetBundle;
 /**
  * Quill assets.
  * 
+ * @author Paweł Bizley Brzozowski
+ * @version 1.2.0
+ * @license Apache 2.0
+ * https://github.com/bizley/yii2-quill
+ * 
+ * Quill can be found at
+ * http://quilljs.com/
+ * https://github.com/quilljs/quill/
  */
 class Asset extends AssetBundle
 {
-    
     /**
      * @inheritdoc
      */
@@ -53,10 +49,9 @@ class Asset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        if (in_array($this->theme, ['base', 'snow'])) {
+        if (in_array($this->theme, [Quill::THEME_BASE, Quill::THEME_SNOW])) {
             $this->css[] = 'quill.' . $this->theme . '.css';
         }
-        
         parent::registerAssetFiles($view);
     }
 }
