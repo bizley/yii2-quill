@@ -21,7 +21,7 @@
     },
     "require": {
         "yiisoft/yii2": "^2.0.0",
-        "bower-asset/quill": "0.*"
+        "bower-asset/quill": "*"
     },
     "autoload": {
         "psr-4": {
