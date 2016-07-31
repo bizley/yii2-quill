@@ -20,8 +20,8 @@
         "source": "https://github.com/bizley/yii2-quill"
     },
     "require": {
-        "yiisoft/yii2": "~2.0.0",
-        "bower-asset/quill": "^0.0.0"
+        "yiisoft/yii2": "^2.0.0",
+        "bower-asset/quill": "^0.20.1"
     },
     "autoload": {
         "psr-4": {
