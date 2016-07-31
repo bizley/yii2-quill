@@ -18,9 +18,9 @@ You can find Quill at http://quilljs.com
 
 Easiest way to install this extension is through the [Composer](https://getcomposer.org).  
 Add in your ```composer.json```:  
-```"bizley/quill": "*"```  
+```"bizley/quill": "1.2.*"```  
 or run console command:  
-```php composer.phar require bizley/quill "*"```
+```php composer.phar require "bizley/quill 1.2.*"```
 
 ### Usage
 
@@ -70,8 +70,8 @@ With **yii2-quill** it is quite simple - there are predefined buttons you can us
 - ```'s'``` strikethrough,
 - ```'font'``` font family,
 - ```'size'``` font size,
-- ```'textColor'``` font colour,
-- ```'backColor'``` background colour,
+- ```'textcolor'``` font colour,
+- ```'backcolor'``` background colour,
 - ```'ol'``` ordered list,
 - ```'ul'``` bullet list,
 - ```'alignment'``` text alignment,
