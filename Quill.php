@@ -144,20 +144,18 @@ class Quill extends InputWidget
      */
     protected function initTheme()
     {
+        $this->_css = self::THEME_BASE;
         if (!empty($this->theme)) {
             if (!is_string($this->theme)) {
                 throw new InvalidConfigException('The "theme" property must be a string!');
             }
+            $this->configs['theme'] = $this->theme;
             if ($this->theme == self::THEME_BOOT) {
                 $this->configs['theme'] = self::THEME_SNOW;
-            } else {
-                $this->configs['theme'] = $this->theme;
             }
             if (in_array($this->theme, [self::THEME_SNOW, self::THEME_BOOT])) {
                 $this->_css = self::THEME_SNOW;
             }
-        } else {
-            $this->_css = self::THEME_BASE;
         }
     }
     
