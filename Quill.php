@@ -164,13 +164,12 @@ class Quill extends InputWidget
      */
     protected function initOptions()
     {
-        if (empty($this->options['class'])) {
-            $this->options['class'] = 'editor';
-        } else {
+        $classes = [];
+        if (!empty($this->options['class'])) {
             $classes = explode(' ', $this->options['class']);
-            $classes[] = 'editor';
-            $this->options['class'] = implode(' ', array_unique($classes));
         }
+        $classes[] = 'editor';
+        $this->options['class'] = implode(' ', array_unique($classes));
         $this->_fieldId = $this->options['id'];
         $this->options['id'] = 'editor-' . $this->id;
     }
