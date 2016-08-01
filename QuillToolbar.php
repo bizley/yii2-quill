@@ -11,7 +11,7 @@ use yii\helpers\Html;
  * Quill Toolbar helper class.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 1.2.0
+ * @version 1.2.0.1
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
@@ -48,17 +48,20 @@ class QuillToolbar extends Component
             if (!is_string($configuration) && !is_array($configuration)) {
                 throw new InvalidConfigException('Toolbar configuration must be a string or an array!');
             }
-        }
-        if (is_string($configuration)) {
-            switch ($configuration) {
-                case Quill::TOOLBAR_FULL:
-                    $this->prepareFullToolbar();
-                    break;
-                case Quill::TOOLBAR_BASIC:
-                    $this->prepareBasicToolbar();
-                    break;
-                default:
-                    $this->_elements = (array)$configuration;
+            if (is_string($configuration)) {
+                switch ($configuration) {
+                    case Quill::TOOLBAR_FULL:
+                        $this->prepareFullToolbar();
+                        break;
+                    case Quill::TOOLBAR_BASIC:
+                        $this->prepareBasicToolbar();
+                        break;
+                    default:
+                        $this->_elements = (array)$configuration;
+                }
+            }
+            if (is_array($configuration)) {
+                $this->_elements = $configuration;
             }
         }
         parent::__construct($componentConfig);
@@ -209,7 +212,7 @@ class QuillToolbar extends Component
      */
     public function renderBackColor()
     {
-        return $this->renderDropdown('rgb(0, 0, 0)', $this->getColors(), 
+        return $this->renderDropdown('rgb(0, 0, 0)', $this->colors, 
             [
                 'title' => Yii::t('app', 'Background Color'), 
                 'class' => 'ql-background'
@@ -470,7 +473,7 @@ class QuillToolbar extends Component
      */
     public function renderTextColor()
     {
-        return $this->renderDropdown('rgb(0, 0, 0)', $this->getColors(), 
+        return $this->renderDropdown('rgb(0, 0, 0)', $this->colors, 
             [
                 'title' => Yii::t('app', 'Text Color'), 
                 'class' => 'ql-color'

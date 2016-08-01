@@ -22,7 +22,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 1.2.0
+ * @version 1.2.0.1
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
@@ -115,7 +115,7 @@ class Quill extends InputWidget
     public function addModules()
     {
         if ($this->quillToolbar) {
-            foreach ($this->quillToolbar->getModules() as $module) {
+            foreach ($this->quillToolbar->modules as $module) {
                 $this->addModule($module);
             }
         }
@@ -190,7 +190,7 @@ class Quill extends InputWidget
      */
     public function registerClientScript()
     {
-        $view = $this->getView();
+        $view = $this->view;
         $asset = Asset::register($view);
         $asset->theme = $this->_css;
         
@@ -247,7 +247,7 @@ class Quill extends InputWidget
      */
     public function renderToolbar()
     {
-        if (!empty($this->quillToolbar->getElements())) {
+        if (!empty($this->quillToolbar->elements)) {
             $toolbarId = 'toolbar-' . $this->id;
             
             if (empty($this->configs['modules'])) {
@@ -318,7 +318,7 @@ class Quill extends InputWidget
      */
     public function getColors()
     {
-        return $this->quillToolbar->getColors();
+        return $this->quillToolbar->colors;
     }
     
     /**
