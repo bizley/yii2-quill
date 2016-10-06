@@ -5,84 +5,167 @@ namespace bizley\quill;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\web\JsExpression;
+use yii\web\View;
 use yii\widgets\InputWidget;
 
 /**
- * Quill editor implementation for Yii 2.
+ * Quill 1.0 editor implementation for Yii 2.
  * 
  * Use it as an active field:
- * <?= $form->field($model, $attribute)->widget(bizley\quill\Quill::className(), []) ?>
+ * <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::className(), []) ?>
  * or as a standalone widget:
- * <?= bizley\quill\Quill::widget(['name' => 'editor']) ?>
- * 
- * Default parameters are:
- * 'theme' => 'bootstrap' adds Bootstrap theme
- * 'toolbar' => 'full' adds full toolbar
+ * <?= \bizley\quill\Quill::widget(['name' => 'editor']) ?>
  * 
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 1.2.0.1
+ * @version 2.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
  * Quill can be found at
- * http://quilljs.com/
+ * https://quilljs.com/
  * https://github.com/quilljs/quill/
  * 
- * @property QuillToolbar $quillToolbar
+ * For previous Quill beta version install bizley/quill ^1.0.
  */
 class Quill extends InputWidget
 {
-    const THEME_BOOT = 'bootstrap';
     const THEME_SNOW = 'snow';
-    const THEME_BASE = 'base';
+    const THEME_BUBBLE = 'bubble';
     
     /**
-     * @var string theme name.
-     * See http://quilljs.com/docs/themes for more info.
-     * You can set this parameter here or use 'configs' array.
-     * Set it to 'snow' to get 'snow' theme.
-     * Set it to false or null to get 'base' theme.
-     * For special Bootstrap theme (not a part of Quill itself) set it to 
-     * 'bootstrap'.
+     * @var string Theme to be set.
+     * See https://quilljs.com/docs/themes/ for more info.
+     * Set it to 'snow' [Quill::THEME_SNOW] to get snow theme.
+     * Set it to 'bubble' [Quill::THEME_BUBBLE] to get bubble theme.
+     * Set it to false or null to remove theme.
+     * This property is skipped if $configuration is set.
      */
-    public $theme = self::THEME_BOOT;
+    public $theme = self::THEME_SNOW;
     
-    const TOOLBAR_FULL = 'full';
-    const TOOLBAR_BASIC = 'basic';
+    const TOOLBAR_FULL = 'FULL';
+    const TOOLBAR_BASIC = 'BASIC';
     
     /**
-     * @var string|array toolbar configuration.
-     * You can set it to 'full' to get full default toolbar as at the home page 
-     * of http://quilljs.com or set it to 'basic' to get only few buttons.
-     * In this is an array every array element should be a button or 
-     * group of buttons definition.
-     * See the documentation for more details.
+     * @var bool|string|array Toolbar buttons.
+     * Set true to get theme default buttons.
+     * You can use above constants for predefined set of buttons.
+     * For other options see README and https://quilljs.com/docs/modules/toolbar/
+     * @since 2.0
      */
-    public $toolbar = self::TOOLBAR_FULL;
+    public $toolbarOptions = true;
     
     /**
-     * @var array Quill configuration as in http://quilljs.com/docs/configuration
+     * @var string Placeholder text to be displayed in the editor field.
+     * Leave empty for default value.
+     * This property is skipped if $configuration is set.
+     * @since 2.0
      */
-    public $configs = [];
+    public $placeholder;
     
     /**
-     * @var string additional js to be called with the editor.
-     * Use placeholder {quill} to get the current editor object variable.
+     * @var string DOM Element that editor ui elements, such as tooltips, should be confined within.
+     * It will be automatically wrapped in JsExpression.
+     * Leave empty for default value.
+     * This property is skipped if $configuration is set.
+     * @since 2.0
+     */
+    public $bounds;
+    
+    /**
+     * @var string Static method enabling logging messages at a given level: 'error', 'warn', 'log', or 'info'.
+     * Leave empty for default value (false).
+     * This property is skipped if $configuration is set.
+     * @since 2.0
+     */
+    public $debug;
+    
+    /**
+     * @var array Whitelist of formats to allow in the editor.
+     * Leave empty for default list (all allowed).
+     * This property is skipped if $configuration is set.
+     * @since 2.0
+     */
+    public $formats;
+    
+    /**
+     * @var array Collection of modules to include and respective options.
+     * This property is skipped if $configuration is set.
+     * Notice: if you set 'toolbar' module it will replace $toolbarOptions configuration.
+     * @since 2.0
+     */
+    public $modules;
+    
+    /**
+     * @var bool Whether to instantiate the editor in read-only mode.
+     * Leave empty for default value (false).
+     * This property is skipped if $configuration is set.
+     * @since 2.0
+     */
+    public $readOnly;
+    
+    /**
+     * @var string Additional JS code to be called with the editor.
+     * Use placeholder {quill} to get the current editor object variable's name.
      * @since 1.1
      */
     public $js;
     
     /**
+     * @var string Quill version to fetch from https://cdn.quilljs.com
+     * Version different from default for this release might not work correctly.
+     * @since 2.0
+     */
+    public $quillVersion = '1.0.6';
+    
+    /**
+     * @var array Quill options.
+     * Set this to override all other parameters and configure Quill manually.
+     * See https://quilljs.com/docs/configuration/ for details.
+     * @since 2.0
+     */
+    public $configuration;
+    
+    /**
+     * @var string KaTeX version to fetch from https://cdnjs.cloudflare.com
+     * Used when Formula module is added.
+     * @since 2.0
+     */
+    public $katexVersion = '0.6.0';
+    
+    /**
+     * @var string Highlight.js version to fetch from https://cdnjs.cloudflare.com
+     * Used when Syntax module is added.
+     * @since 2.0
+     */
+    public $highlightVersion = '9.7.0';
+    
+    /**
+     * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
+     * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
+     * Used when Syntax module is added.
+     * @since 2.0
+     */
+    public $highlightStyle = 'default.min.css';
+    
+    /**
+     * @var array HTML attributes for the input tag.
+     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
+     */
+    public $options = ['style' => 'min-height:150px;'];
+    
+    /**
+     * @var string HTML tag for the editor.
+     * @since 2.0
+     */
+    public $tag = 'div';
+
+    /**
      * @inheritdoc
      */
     public static $autoIdPrefix = 'quill-';
-    
-    /**
-     * @var string selected css mode.
-     */
-    protected $_css;
     
     /**
      * @var string ID of the editor.
@@ -90,281 +173,173 @@ class Quill extends InputWidget
     protected $_fieldId;
     
     /**
-     * @var QuillToolbar
+     * @var array
+     * @since 2.0
      */
-    protected $_quillToolbar;
+    protected $_quillConfiguration = [];
 
-    /**
-     * Ensures the required module is added in configs.
-     * @param string $name
-     * @since 1.2.0
-     */
-    public function addModule($name)
-    {
-        if (!isset($this->configs['modules'])) {
-            $this->configs['modules'] = [];
-        }
-        if (!isset($this->configs['modules'][$name])) {
-            $this->configs['modules'][$name] = true;
-        }
-    }
-    
-    /**
-     * Adds modules dependency.
-     */
-    public function addModules()
-    {
-        if ($this->quillToolbar) {
-            foreach ($this->quillToolbar->modules as $module) {
-                $this->addModule($module);
-            }
-        }
-    }
-    
     /**
      * @inheritdoc
      */
     public function init()
     {
-        if (!is_array($this->configs)) {
-            throw new InvalidConfigException('The "configs" property must be an array!');
+        if (empty($this->quillVersion) && !is_string($this->quillVersion)) {
+            throw new InvalidConfigException('The "quillVersion" property must be a non-empty string!');
+        }
+        if (!empty($this->configuration) && !is_array($this->configuration)) {
+            throw new InvalidConfigException('The "configuration" property must be an array!');
         }
         if (!empty($this->js) && !is_string($this->js)) {
             throw new InvalidConfigException('The "js" property must be a string!');
         }
+        if (!empty($this->formats) && !is_array($this->formats)) {
+            throw new InvalidConfigException('The "formats" property must be an array!');
+        }
+        if (!empty($this->modules) && !is_array($this->modules)) {
+            throw new InvalidConfigException('The "modules" property must be an array!');
+        }
+        
         parent::init();
-        $this->initTheme();
-        $this->setQuillToolbar($this->toolbar);
-        $this->initOptions();
-    }
-    
-    /**
-     * Initiates theme option.
-     * @throws InvalidConfigException
-     */
-    protected function initTheme()
-    {
-        $this->_css = self::THEME_BASE;
-        if (!empty($this->theme)) {
-            if (!is_string($this->theme)) {
-                throw new InvalidConfigException('The "theme" property must be a string!');
-            }
-            $this->configs['theme'] = $this->theme;
-            if ($this->theme == self::THEME_BOOT) {
-                $this->configs['theme'] = self::THEME_SNOW;
-            }
-            if (in_array($this->theme, [self::THEME_SNOW, self::THEME_BOOT])) {
-                $this->_css = self::THEME_SNOW;
-            }
-        }
-    }
-    
-    /**
-     * Initiates widget HTML options.
-     */
-    protected function initOptions()
-    {
-        $classes = [];
-        if (!empty($this->options['class'])) {
-            $classes = explode(' ', $this->options['class']);
-        }
-        $classes[] = 'editor';
-        $this->options['class'] = implode(' ', array_unique($classes));
+        
         $this->_fieldId = $this->options['id'];
         $this->options['id'] = 'editor-' . $this->id;
+        
+        $this->prepareOptions();
     }
-
+    
+    private $_katex = false;
+    private $_highlight = false;
+    
+    /**
+     * Prepares Quill configuration.
+     */
+    protected function prepareOptions()
+    {
+        if (!empty($this->configuration)) {
+            if (isset($this->configuration['theme'])) {
+                $this->theme = $this->configuration['theme'];
+            }
+            if (isset($this->configuration['modules']['formula'])) {
+                $this->_katex = true;
+            }
+            if (isset($this->configuration['modules']['syntax'])) {
+                $this->_highlight = true;
+            }
+            $this->_quillConfiguration = $this->configuration;
+        } else {
+            if (!empty($this->theme)) {
+                $this->_quillConfiguration['theme'] = $this->theme;
+            }
+            if (!empty($this->bounds)) {
+                $this->_quillConfiguration['bounds'] = new JsExpression($this->bounds);
+            }
+            if (!empty($this->debug)) {
+                $this->_quillConfiguration['debug'] = $this->debug;
+            }
+            if (!empty($this->placeholder)) {
+                $this->_quillConfiguration['placeholder'] = $this->placeholder;
+            }
+            if (!empty($this->formats)) {
+                $this->_quillConfiguration['formates'] = $this->formats;
+            }
+            
+            if (!empty($this->modules)) {
+                foreach ($this->modules as $module => $config) {
+                    $this->_quillConfiguration['modules'][$module] = $config;
+                    if ($module == 'formula') {
+                        $this->_katex = true;
+                    }
+                    if ($module == 'syntax') {
+                        $this->_highlight = true;
+                    }
+                }
+            }
+            if (!empty($this->toolbarOptions)) {
+                $this->_quillConfiguration['modules']['toolbar'] = $this->renderToolbar();
+            }
+        }
+    }
+    
     /**
      * @inheritdoc
      */
     public function run()
     {
-        $toolbar = $this->renderToolbar();
-        $this->addModules();
         $this->registerClientScript();
-        return $this->renderEditor($toolbar);
+        if ($this->hasModel()) {
+            return Html::activeHiddenInput(
+                $this->model, $this->attribute, ['id' => $this->_fieldId]
+            ) . Html::tag(
+                $this->tag, $this->model->{$this->attribute}, $this->options
+            );
+        }
+        return Html::hiddenInput(
+            $this->name, $this->value, ['id' => $this->_fieldId]
+        ) . Html::tag(
+            $this->tag, $this->value, $this->options
+        );
     }
     
     /**
      * Registers widget assets.
+     * Note that Quill works without jQuery.
      */
     public function registerClientScript()
     {
         $view = $this->view;
-        $asset = Asset::register($view);
-        $asset->theme = $this->_css;
         
-        $configs = !empty($this->configs) ? Json::encode($this->configs) : '';
-        $var = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
-        $js = "var $var = new Quill('#editor-{$this->id}', $configs);";
-        $js .= "$var.on('text-change', function() { jQuery('#{$this->_fieldId}').val(this.getHTML()); });";
+        if ($this->_katex) {
+            $katexAsset = KatexAsset::register($view);
+            $katexAsset->version = $this->katexVersion;
+        }
+        if ($this->_highlight) {
+            $highlightAsset = HighlightAsset::register($view);
+            $highlightAsset->version = $this->highlightVersion;
+            $highlightAsset->style = $this->highlightStyle;
+        }
+        
+        $asset = QuillAsset::register($view);
+        $asset->theme = $this->theme;
+        $asset->version = $this->quillVersion;
+        
+        $configs = Json::encode($this->_quillConfiguration);
+        $editor = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
+        
+        $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
+        $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
         if (!empty($this->js)) {
-            $js .= str_replace('{quill}', $var, $this->js);
+            $js .= str_replace('{quill}', $editor, $this->js);
         }
-        $view->registerJs($js);
+        $view->registerJs($js, View::POS_END);
     }
     
     /**
-     * Renders editor.
-     * @property string $toolbar
-     * @return string
-     * @since 1.2.0
-     */
-    public function renderEditor($toolbar)
-    {
-        $bootstrap = $this->theme == self::THEME_BOOT;
-        $editor = '';
-        if ($bootstrap) {
-            $editor .= Html::beginTag('div', ['class' => 'panel panel-default']);
-        }
-        if ($this->hasModel()) {
-            $editor .= Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->_fieldId]);
-        } else {
-            $editor .= Html::hiddenInput($this->name, $this->value, ['id' => $this->_fieldId]);
-        }
-        if ($bootstrap) {
-            $editor .= Html::beginTag('div', ['class' => 'panel-body', 'style' => 'padding:0; border-bottom:1px solid #ccc']);
-        }
-        $editor .= $toolbar;
-        if ($bootstrap) {
-            $editor .= Html::endTag('div') . Html::beginTag('div', ['class' => 'panel-body']);
-        }
-        if ($this->hasModel()) {
-            $editor .= Html::tag('div', $this->model->{$this->attribute}, $this->options);
-        } else {
-            $editor .= Html::tag('div', $this->value, $this->options);
-        }        
-        if ($bootstrap) {
-            $editor .= Html::endTag('div') . Html::endTag('div');
-        }
-        return $editor;
-    }
-    
-    /**
-     * Renders toolbar.
-     * @return string
-     * @since 1.2.0
+     * Prepares predefined set of buttons.
+     * @return boolean|array
      */
     public function renderToolbar()
     {
-        if (!empty($this->quillToolbar->elements)) {
-            $toolbarId = 'toolbar-' . $this->id;
-            
-            if (empty($this->configs['modules'])) {
-                $this->configs['modules'] = ['toolbar' => []];
-            }
-            $this->configs['modules']['toolbar'] = ['container' => '#' . $toolbarId];
-            
-            return $this->quillToolbar->render($toolbarId);
+        if ($this->toolbarOptions == self::TOOLBAR_BASIC) {
+            return [
+                ['bold', 'italic', 'underline', 'strike'], 
+                [['list' => 'ordered'], ['list' => 'bullet']], 
+                [['align' => []]], 
+                ['link']
+            ];
         }
-        return null;
-    }
-    
-    /**
-     * Returns Quill toolbar object.
-     * @return QuillToolbar
-     * @since 1.2.0
-     */
-    public function getQuillToolbar()
-    {
-        return $this->_quillToolbar;
-    }
-    
-    /**
-     * Sets Quill toolbar object.
-     * @param string|array|null $toolbarConfig configuration
-     * @since 1.2.0
-     */
-    public function setQuillToolbar($toolbarConfig)
-    {
-        $this->_quillToolbar = new QuillToolbar($toolbarConfig);
-    }
-    
-    /**
-     * Deprecated since 1.2.0
-     * -------------------------------------------------------------------------
-     */
-    
-    /**
-     * Adds button to the toolbar.
-     * @deprecated 1.2.0 use getQuillToolbar()->renderButton() instead.
-     */
-    public function addButton($element)
-    {
-        return $this->quillToolbar->renderButton($element);
-    }
-    
-    /**
-     * Adds group of buttons to the toolbar.
-     * @deprecated 1.2.0 use getQuillToolbar()->renderGroup() instead.
-     */
-    public function addGroup($elements)
-    {
-        return $this->quillToolbar->renderGroup($elements);
-    }
-    
-    /**
-     * Adds toolbar based on the toolbar parameter.
-     * @deprecated 1.2.0 use renderToolbar() instead.
-     */
-    public function addToolbar()
-    {
-        return $this->renderToolbar();
-    }
-    
-    /**
-     * Returns default list of colours.
-     * @deprecated 1.2.0 use getQuillToolbar()->getColors() instead.
-     */
-    public function getColors()
-    {
-        return $this->quillToolbar->colors;
-    }
-    
-    /**
-     * Initiates configs array.
-     * @deprecated 1.2.0
-     */
-    public function initConfigs()
-    {
-        return;
-    }
-    
-    /**
-     * Initiates toolbar option.
-     * @deprecated 1.2.0 use setQuillToolbar() instead.
-     */
-    public function initToolbar()
-    {
-        $this->setQuillToolbar($this->toolbar);
-    }
-    
-    /**
-     * Ensures the required modules are added in configs.
-     * @deprecated 1.2.0 use addModule() instead.
-     */
-    public function makeSureThereIsModule($name)
-    {
-        return $this->addModule($name);
-    }
-    
-    /**
-     * Sets toolbar to full.
-     * @deprecated 1.2.0 use setQuillToolbar('full') 
-     * or getQuillToolbar()->prepareFullToolbar() instead.
-     */
-    public function setFullToolbar()
-    {
-        return $this->quillToolbar->prepareFullToolbar();
-    }
-    
-    /**
-     * Sets toolbar to basic.
-     * @deprecated 1.2.0 use setQuillToolbar('basic') 
-     * or getQuillToolbar()->prepareBasicToolbar() instead.
-     */
-    public function setBasicToolbar()
-    {
-        return $this->quillToolbar->prepareBasicToolbar();
+        if ($this->toolbarOptions == self::TOOLBAR_FULL) {
+            return [
+                [['font' => []], ['size' => ['small', false, 'large', 'huge']]],
+                ['bold', 'italic', 'underline', 'strike'],
+                [['color' => []], ['background' => []]],
+                [['script' => 'sub'], ['script' => 'super']],
+                [['header' => 1], ['header' => 2], 'blockquote', 'code-block'],
+                [['list' => 'ordered'], ['list' => 'bullet'], ['indent' => '-1'], ['indent' => '+1']],
+                [['direction' => 'rtl'], ['align' => []]],
+                ['link', 'image', 'video'],
+                ['clean']
+            ];
+        }
+        return $this->toolbarOptions;
     }
 }

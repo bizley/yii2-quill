@@ -1,4 +1,5 @@
 # yii2-quill
+
 [![Latest Stable Version](https://poser.pugx.org/bizley/quill/v/stable)](https://packagist.org/packages/bizley/quill) 
 [![Total Downloads](https://poser.pugx.org/bizley/quill/downloads)](https://packagist.org/packages/bizley/quill) 
 [![Latest Unstable Version](https://poser.pugx.org/bizley/quill/v/unstable)](https://packagist.org/packages/bizley/quill) 
@@ -7,9 +8,11 @@
 *Yii 2 implementation of Quill, modern WYSIWYG editor.*
 
 ## Quill
-You can find Quill at http://quilljs.com  
-- [Documentation](http://quilljs.com/docs/quickstart)
-- [Examples](http://quilljs.com/examples)
+
+You can find Quill at https://quilljs.com/  
+- [Documentation](https://quilljs.com/docs/quickstart/)
+- [Guides](https://quilljs.com/guides/why-quill/)
+- [Playground](https://quilljs.com/playground/)
 - [GitHub](https://github.com/quilljs/quill)
 
 ## yii2-quill
@@ -17,78 +20,130 @@ You can find Quill at http://quilljs.com
 ### Installation
 
 Easiest way to install this extension is through the [Composer](https://getcomposer.org).  
-Add in your ```composer.json```:  
-```"bizley/quill": "1.2.*"```  
+Add in your `composer.json`:  
+`"bizley/quill": "^2.0"`  
 or run console command:  
-```php composer.phar require "bizley/quill 1.2.*"```
+`php composer.phar require "bizley/quill ^2.0"`
+
+If you want to install Quill beta version add:  
+`"bizley/quill": "^1.0"`
 
 ### Usage
 
 Use it as an active field extension  
-```<?= $form->field($model, $attribute)->widget(bizley\quill\Quill::className(), []) ?>```
+`<?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::className(), []) ?>`
 
 or as a standalone widget  
-```<?= bizley\quill\Quill::widget(['name' => 'editor']) ?>```
+`<?= \bizley\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>`
 
-### Parameters
-- **theme** *string* default ```'bootstrap'```  
-  ```false``` or ```null``` for Quill's default theme with quill.base.css,  
-  ```'snow'``` for Quill's snow theme with quill.snow.css,  
-  ```'bootstrap'``` for snow theme with editor wrapped in [Bootstrap's panel](http://getbootstrap.com/components/#panels)  
-  You can set theme in ```configs``` array instead but this is the only way to set ```'bootstrap'``` theme.  
-  See [Quill's documentation for themes](http://quilljs.com/docs/themes).
-  
-- **toolbar** *string* or *array* default ```'full'```  
-  In case of *string*:  
-  ```false``` or ```null``` to switch toolbar off,  
-  ```'full'``` for full Quill's toolbar as seen [here](http://quilljs.com),  
-  ```'basic'``` for few basic toolbar options,  
-  *anything else* for single button (see below).  
-  In case of *array*:  
-  *string element* for single button (see below),  
-  *array element* for buttons grouped together - every element of this array should be *string* (a single button).
-  
-- **configs** *array* default ```[]```  
-  Array of Quill's configuration. This is the equivalent of [Quill's configs variable](http://quilljs.com/docs/configuration)
+### Basic parameters
 
-- **options** *array* default ```[]```  
-  Array of HTML options passed to the editor's div.
+ - **theme** *string* default `'snow'`  
+   `'snow'` (`Quill::THEME_SNOW`) for Quill's [snow theme](https://quilljs.com/docs/themes/#snow),  
+   `'bubble'` (`Quill::THEME_BUBBLE`) for Quill's [bubble theme](https://quilljs.com/docs/themes/#bubble),  
+   `false` or `null` to remove theme.
+   See [Quill's documentation for themes](https://quilljs.com/docs/themes/).
 
-- **js** *string* default ```null```  
-  Additional js to be called with the editor.
-  Use placeholder ```{quill}``` to get the current editor object variable.
-  
+ - **toolbarOptions** *boolean|string|array* default `true`  
+   `true` for theme's default toolbar,  
+   `'FULL'` (`Quill::TOOLBAR_FULL`) for full Quill's toolbar,  
+   `'BASIC'` (`Quill::TOOLBAR_BASIC`) for few basic toolbar options,  
+   *array* for toolbar configuration (see below).  
+
 ### Toolbar
-Quill allows you to add your own HTML toolbar for the editor. This is very flexible solution but in most cases you just need to 
-get few standard buttons without worrying about the HTML tags and where and how to properly place them.  
-With **yii2-quill** it is quite simple - there are predefined buttons you can use:  
 
-- ```'|'``` separator,
-- ```'b'``` bold,
-- ```'i'``` italic,
-- ```'u'``` underline,
-- ```'s'``` strikethrough,
-- ```'font'``` font family,
-- ```'size'``` font size,
-- ```'textcolor'``` font colour,
-- ```'backcolor'``` background colour,
-- ```'ol'``` ordered list,
-- ```'ul'``` bullet list,
-- ```'alignment'``` text alignment,
-- ```'link'``` link,
-- ```'image'``` image  
+Quill's toolbar from version 1.0 can be easily configured with custom set of buttons.  
+See [Toolbar module](https://quilljs.com/docs/modules/toolbar/) documentation for details.
 
-With **toolbar** parameter set to ```'full'``` all these buttons are added. ```'basic'``` gives you only 
-```'b', 'i', 'u', 's', 'ol', 'ul', 'alignment', 'link'```.
+You can pass PHP array to `'toolbarOptions'` parameter to configure this module (it will be JSON-encoded).
 
-In case you want totally different set of buttons you can set them like:  
-```'toolbar' => ['b', 'i', 'u', '|', 'font', '|', 'alignment'],```
+For example, to get:
 
-If you want to group some buttons together use nested arrays:  
-```'toolbar' => [['b', 'i', 'u'], ['font', 'alignment']],```
+```js
+new Quill('#editor', {
+    modules: {
+        toolbar: [['bold', 'italic', 'underline'], [{'color': []}]]
+    }
+});
+```
 
-And don't worry about adding modules in **configs** for ```'link'``` and ```'image'``` options - this is done automatically.
+add the following code in widget configuration:
 
-You may wonder what to do in case of adding some button that is not listed here - simply just put the HTML code of the button 
-inside the **toolbar** array. *And there is still this option to create separate toolbar from the scratch - you can add toolbar 
-module with its container's ID in the __configs__ array as [seen here](http://quilljs.com/docs/quickstart).*
+```php
+[
+    'toolbarOptions' => [['bold', 'italic', 'underline'], [['color' => []]]],
+],
+```
+
+Toolbar configuration for previous yii2-quill version (**^1.0** with Quill *beta*) is deprecated.
+
+## Additional information
+
+### Container and form's input
+
+Quill editor is rendered in `div` container (this can be changed by setting `'tag'` parameter) 
+and edited content is copied to hidden input field so it can be used in forms.
+
+### Editor box's height
+
+Default editor height is *150px* (this can be changed by setting `'options'` parameter) and 
+its box extends as new text lines are added.
+
+### Quill source
+
+Quill's JS code is provided by CDN. You can change the Quill's version set with the current yii2-quill's 
+release by changing `'quillVersion'` parameter but some options may not work correctly in this case.
+
+### Additional JavaScript code
+
+You can use parameter `'js'` to append additional JS code.  
+For example, to disable user input Quill's API provides this JS:
+
+```js
+quill.enable(false);
+```
+
+To get the same through widget's configuration add the following code:
+
+```php
+[
+    'js' => '{quill}.enable(false);',
+],
+```
+
+`{quill}` placeholder will be automatically replaced with the editor's object variable name.  
+For more details about Quill's API visit https://quilljs.com/docs/api/
+
+### Formula module
+
+Quill can render math formulas using the [KaTeX](https://khan.github.io/KaTeX/) library.  
+To add this option configure widget with [Formula module](https://quilljs.com/docs/modules/formula/):
+
+```php
+[
+    'modules' => [
+        'formula' => true // Include formula module
+    ],
+    'toolbarOptions' => [['formula']] // Include button in toolbar
+]
+```
+
+You can change the version of KaTeX by setting the `'katexVersion'` parameter.
+
+### Syntax Highlighter module
+
+Quill can automatically detect and apply syntax highlighting using the [highlight.js](https://highlightjs.org/) library.
+To add this option configure widget with [Syntax Highlighter module](https://quilljs.com/docs/modules/syntax/):
+
+```php
+[
+    'modules' => [
+        'syntax' => true // Include syntax module
+    ],
+    'toolbarOptions' => [['code-block']] // Include button in toolbar
+]
+```
+
+You can change the version of highlight.js by setting the `'highlightVersion'` parameter.  
+You can change the default highlight.js stylesheet by setting the `'highlightStyle'` parameter. 
+See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) (all files ending with `.min.css`).
