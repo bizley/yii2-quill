@@ -1,9 +1,8 @@
 # yii2-quill
 
-[![Latest Stable Version](https://poser.pugx.org/bizley/quill/v/stable)](https://packagist.org/packages/bizley/quill) 
-[![Total Downloads](https://poser.pugx.org/bizley/quill/downloads)](https://packagist.org/packages/bizley/quill) 
-[![Latest Unstable Version](https://poser.pugx.org/bizley/quill/v/unstable)](https://packagist.org/packages/bizley/quill) 
-[![License](https://poser.pugx.org/bizley/quill/license)](https://packagist.org/packages/bizley/quill)
+![Latest Stable Version](https://img.shields.io/packagist/v/bizley/quill.svg)
+![Total Downloads](https://img.shields.io/packagist/dt/bizley/quill.svg)
+![License](https://img.shields.io/packagist/l/bizley/quill.svg)
 
 *Yii 2 implementation of Quill, modern WYSIWYG editor.*
 
