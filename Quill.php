@@ -10,7 +10,7 @@ use yii\web\View;
 use yii\widgets\InputWidget;
 
 /**
- * Quill 1.0 editor implementation for Yii 2.
+ * Quill 1.1 editor implementation for Yii 2.
  * 
  * Use it as an active field:
  * <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::className(), []) ?>
@@ -20,7 +20,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 2.0
+ * @version 2.0.1
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
@@ -118,7 +118,7 @@ class Quill extends InputWidget
      * Version different from default for this release might not work correctly.
      * @since 2.0
      */
-    public $quillVersion = '1.0.6';
+    public $quillVersion = '1.1.5';
     
     /**
      * @var array Quill options.
@@ -140,7 +140,7 @@ class Quill extends InputWidget
      * Used when Syntax module is added.
      * @since 2.0
      */
-    public $highlightVersion = '9.7.0';
+    public $highlightVersion = '9.8.0';
     
     /**
      * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
