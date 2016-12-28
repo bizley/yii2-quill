@@ -20,7 +20,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 2.0.1
+ * @version 2.1
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
@@ -118,7 +118,7 @@ class Quill extends InputWidget
      * Version different from default for this release might not work correctly.
      * @since 2.0
      */
-    public $quillVersion = '1.1.5';
+    public $quillVersion = '1.1.8';
     
     /**
      * @var array Quill options.
@@ -140,7 +140,7 @@ class Quill extends InputWidget
      * Used when Syntax module is added.
      * @since 2.0
      */
-    public $highlightVersion = '9.8.0';
+    public $highlightVersion = '9.9.0';
     
     /**
      * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
@@ -306,6 +306,7 @@ class Quill extends InputWidget
         $editor = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
         
         $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
+        $js .= "document.getElementById(\"editor-{$this->id}\").onclick=function(e){document.querySelector(\"#editor-{$this->id} .ql-editor\").focus();};";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
         if (!empty($this->js)) {
             $js .= str_replace('{quill}', $editor, $this->js);
