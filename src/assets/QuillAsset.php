@@ -1,6 +1,6 @@
 <?php
 
-namespace bizley\quill;
+namespace bizley\quill\assets;
 
 use yii\web\AssetBundle;
 

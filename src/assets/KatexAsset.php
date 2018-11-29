@@ -1,11 +1,11 @@
 <?php
 
-namespace bizley\quill;
+namespace bizley\quill\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Highlight.js assets.
+ * KaTeX assets.
  * 
  * @author Paweł Bizley Brzozowski
  * @version 2.0
@@ -16,17 +16,17 @@ use yii\web\AssetBundle;
  * https://quilljs.com/
  * https://github.com/quilljs/quill/
  * 
- * Highlight.js can be found at
- * https://highlightjs.org/
- * https://github.com/isagalaev/highlight.js
+ * KaTeX can be found at
+ * https://khan.github.io/KaTeX/
+ * https://github.com/Khan/KaTeX
  */
-class HighlightAsset extends AssetBundle
+class KatexAsset extends AssetBundle
 {
     /**
      * @var string CDN URL.
      * @since 2.0
      */
-    public $url = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/';
+    public $url = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/';
     
     /**
      * @var string version to fetch from CDN.
@@ -35,19 +35,13 @@ class HighlightAsset extends AssetBundle
     public $version;
     
     /**
-     * @var string stylesheet to fetch from CDN.
-     * @since 2.0
-     */
-    public $style;
-    
-    /**
      * Register CSS and JS file based on version.
      * @param \yii\web\View $view the view that the asset files are to be registered with.
      */
     public function registerAssetFiles($view)
     {
-        $this->css = [$this->url . $this->version . '/styles/' . $this->style];
-        $this->js = [$this->url . $this->version . '/highlight.min.js'];
+        $this->css = [$this->url . $this->version . '/katex.min.css'];
+        $this->js = [$this->url . $this->version . '/katex.min.js'];
         
         parent::registerAssetFiles($view);
     }

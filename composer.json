@@ -1,30 +1,33 @@
 {
-    "name": "bizley/quill",
-    "description": "Quill editor implementation for Yii 2.",
-    "type": "yii2-extension",
-    "keywords": [
-        "yii2",
-        "quill",
-        "wysiwyg",
-        "widget",
-        "editor"
-    ],
-    "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Pawel Bizley Brzozowski",
-            "email": "pawel@positive.codes"
-        }
-    ],
-    "support": {
-        "source": "https://github.com/bizley/yii2-quill"
-    },
-    "require": {
-        "yiisoft/yii2": "^2.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "bizley\\quill\\": ""
-        }
+  "name": "bizley/quill",
+  "description": "Quill editor implementation for Yii 2.",
+  "type": "yii2-extension",
+  "keywords": ["yii2","quill","wysiwyg","widget","editor"],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Pawel Bizley Brzozowski",
+      "email": "pawel@positive.codes"
     }
+  ],
+  "support": {
+    "source": "https://github.com/bizley/yii2-quill"
+  },
+  "require": {
+    "yiisoft/yii2": ">=2.0.0 <2.1.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "bizley\\quill\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
 }
