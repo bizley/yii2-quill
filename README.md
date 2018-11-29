@@ -1,7 +1,7 @@
 # yii2-quill
 
 ![Latest Stable Version](https://img.shields.io/packagist/v/bizley/quill.svg)
-![Total Downloads](https://img.shields.io/packagist/dt/bizley/quill.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/bizley/quill.svg)](https://packagist.org/packages/bizley/quill)
 ![License](https://img.shields.io/packagist/l/bizley/quill.svg)
 
 *Yii 2 implementation of Quill, modern WYSIWYG editor.*
@@ -18,22 +18,26 @@ You can find Quill at https://quilljs.com/
 
 ### Installation
 
-Easiest way to install this extension is through the [Composer](https://getcomposer.org).  
-Add in your `composer.json`:  
-`"bizley/quill": "^2.0"`  
-or run console command:  
-`php composer.phar require "bizley/quill ^2.0"`
+Add the package to your `composer.json`:
 
-If you want to install Quill beta version add:  
-`"bizley/quill": "^1.0"`
+    {
+        "require": {
+            "bizley/quill": "^2.0"
+        }
+    }
+
+and run `composer update` or alternatively run `composer require bizley/quill:^2.1`
 
 ### Usage
 
 Use it as an active field extension  
-`<?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::className(), []) ?>`
 
-or as a standalone widget  
-`<?= \bizley\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>`
+    <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::class, []) ?>
+
+Or as a standalone widget
+  
+    <?= \bizley\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>
+
 
 ### Basic parameters
 
@@ -73,8 +77,6 @@ add the following code in widget configuration:
     'toolbarOptions' => [['bold', 'italic', 'underline'], [['color' => []]]],
 ],
 ```
-
-Toolbar configuration for previous yii2-quill version (**^1.0** with Quill *beta*) is deprecated.
 
 ## Additional information
 
@@ -121,9 +123,9 @@ To add this option configure widget with [Formula module](https://quilljs.com/do
 ```php
 [
     'modules' => [
-        'formula' => true // Include formula module
+        'formula' => true, // Include formula module
     ],
-    'toolbarOptions' => [['formula']] // Include button in toolbar
+    'toolbarOptions' => [['formula']], // Include button in toolbar
 ]
 ```
 
@@ -137,7 +139,7 @@ To add this option configure widget with [Syntax Highlighter module](https://qui
 ```php
 [
     'modules' => [
-        'syntax' => true // Include syntax module
+        'syntax' => true, // Include syntax module
     ],
     'toolbarOptions' => [['code-block']] // Include button in toolbar
 ]

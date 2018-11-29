@@ -2,6 +2,9 @@
 
 namespace bizley\quill;
 
+use bizley\quill\assets\HighlightAsset;
+use bizley\quill\assets\KatexAsset;
+use bizley\quill\assets\QuillAsset;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -10,25 +13,24 @@ use yii\web\View;
 use yii\widgets\InputWidget;
 
 /**
- * Quill 1.2 editor implementation for Yii 2.
+ * Quill editor implementation for Yii 2.
  * 
  * Use it as an active field:
- * <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::className(), []) ?>
- * or as a standalone widget:
+ * <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::class, []) ?>
+ *
+ * Or as a standalone widget:
  * <?= \bizley\quill\Quill::widget(['name' => 'editor']) ?>
  * 
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 2.2
+ * @version 2.3.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
- * Quill can be found at
+ * Quill itself can be found at
  * https://quilljs.com/
  * https://github.com/quilljs/quill/
- * 
- * For previous Quill beta version install bizley/quill ^1.0.
  */
 class Quill extends InputWidget
 {
@@ -180,22 +182,27 @@ class Quill extends InputWidget
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
     public function init()
     {
-        if (empty($this->quillVersion) && !is_string($this->quillVersion)) {
+        if (!empty($this->quillVersion) && !\is_string($this->quillVersion)) {
             throw new InvalidConfigException('The "quillVersion" property must be a non-empty string!');
         }
-        if (!empty($this->configuration) && !is_array($this->configuration)) {
+
+        if (!empty($this->configuration) && !\is_array($this->configuration)) {
             throw new InvalidConfigException('The "configuration" property must be an array!');
         }
-        if (!empty($this->js) && !is_string($this->js)) {
+
+        if (!empty($this->js) && !\is_string($this->js)) {
             throw new InvalidConfigException('The "js" property must be a string!');
         }
-        if (!empty($this->formats) && !is_array($this->formats)) {
+
+        if (!empty($this->formats) && !\is_array($this->formats)) {
             throw new InvalidConfigException('The "formats" property must be an array!');
         }
-        if (!empty($this->modules) && !is_array($this->modules)) {
+
+        if (!empty($this->modules) && !\is_array($this->modules)) {
             throw new InvalidConfigException('The "modules" property must be an array!');
         }
         
@@ -219,26 +226,34 @@ class Quill extends InputWidget
             if (isset($this->configuration['theme'])) {
                 $this->theme = $this->configuration['theme'];
             }
+
             if (isset($this->configuration['modules']['formula'])) {
                 $this->_katex = true;
             }
+
             if (isset($this->configuration['modules']['syntax'])) {
                 $this->_highlight = true;
             }
+
             $this->_quillConfiguration = $this->configuration;
+
         } else {
             if (!empty($this->theme)) {
                 $this->_quillConfiguration['theme'] = $this->theme;
             }
+
             if (!empty($this->bounds)) {
                 $this->_quillConfiguration['bounds'] = new JsExpression($this->bounds);
             }
+
             if (!empty($this->debug)) {
                 $this->_quillConfiguration['debug'] = $this->debug;
             }
+
             if (!empty($this->placeholder)) {
                 $this->_quillConfiguration['placeholder'] = $this->placeholder;
             }
+
             if (!empty($this->formats)) {
                 $this->_quillConfiguration['formates'] = $this->formats;
             }
@@ -246,14 +261,17 @@ class Quill extends InputWidget
             if (!empty($this->modules)) {
                 foreach ($this->modules as $module => $config) {
                     $this->_quillConfiguration['modules'][$module] = $config;
-                    if ($module == 'formula') {
+
+                    if ($module === 'formula') {
                         $this->_katex = true;
                     }
-                    if ($module == 'syntax') {
+
+                    if ($module === 'syntax') {
                         $this->_highlight = true;
                     }
                 }
             }
+
             if (!empty($this->toolbarOptions)) {
                 $this->_quillConfiguration['modules']['toolbar'] = $this->renderToolbar();
             }
@@ -266,18 +284,20 @@ class Quill extends InputWidget
     public function run()
     {
         $this->registerClientScript();
+
         if ($this->hasModel()) {
             return Html::activeHiddenInput(
-                $this->model, $this->attribute, ['id' => $this->_fieldId]
-            ) . Html::tag(
-                $this->tag, $this->model->{$this->attribute}, $this->options
-            );
+                    $this->model, $this->attribute, ['id' => $this->_fieldId]
+                ) . Html::tag(
+                    $this->tag, $this->model->{$this->attribute}, $this->options
+                );
         }
+
         return Html::hiddenInput(
-            $this->name, $this->value, ['id' => $this->_fieldId]
-        ) . Html::tag(
-            $this->tag, $this->value, $this->options
-        );
+                $this->name, $this->value, ['id' => $this->_fieldId]
+            ) . Html::tag(
+                $this->tag, $this->value, $this->options
+            );
     }
     
     /**
@@ -292,6 +312,7 @@ class Quill extends InputWidget
             $katexAsset = KatexAsset::register($view);
             $katexAsset->version = $this->katexVersion;
         }
+
         if ($this->_highlight) {
             $highlightAsset = HighlightAsset::register($view);
             $highlightAsset->version = $this->highlightVersion;
@@ -308,19 +329,21 @@ class Quill extends InputWidget
         $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "document.getElementById(\"editor-{$this->id}\").onclick=function(e){document.querySelector(\"#editor-{$this->id} .ql-editor\").focus();};";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
+
         if (!empty($this->js)) {
             $js .= str_replace('{quill}', $editor, $this->js);
         }
+
         $view->registerJs($js, View::POS_END);
     }
     
     /**
      * Prepares predefined set of buttons.
-     * @return boolean|array
+     * @return bool|array
      */
     public function renderToolbar()
     {
-        if ($this->toolbarOptions == self::TOOLBAR_BASIC) {
+        if ($this->toolbarOptions === self::TOOLBAR_BASIC) {
             return [
                 ['bold', 'italic', 'underline', 'strike'], 
                 [['list' => 'ordered'], ['list' => 'bullet']], 
@@ -328,7 +351,8 @@ class Quill extends InputWidget
                 ['link']
             ];
         }
-        if ($this->toolbarOptions == self::TOOLBAR_FULL) {
+
+        if ($this->toolbarOptions === self::TOOLBAR_FULL) {
             return [
                 [['font' => []], ['size' => ['small', false, 'large', 'huge']]],
                 ['bold', 'italic', 'underline', 'strike'],
@@ -341,6 +365,7 @@ class Quill extends InputWidget
                 ['clean']
             ];
         }
+
         return $this->toolbarOptions;
     }
 }

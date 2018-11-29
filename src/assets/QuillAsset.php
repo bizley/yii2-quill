@@ -2,15 +2,11 @@
 
 namespace bizley\quill\assets;
 
+use bizley\quill\Quill;
 use yii\web\AssetBundle;
 
 /**
  * Quill assets.
- * 
- * @author Paweł Bizley Brzozowski
- * @version 2.0
- * @license Apache 2.0
- * https://github.com/bizley/yii2-quill
  * 
  * Quill can be found at
  * https://quilljs.com/
@@ -46,9 +42,11 @@ class QuillAsset extends AssetBundle
             case Quill::THEME_SNOW:
                 $this->css = [$this->url . $this->version . '/quill.snow.css'];
                 break;
+
             case Quill::THEME_BUBBLE:
                 $this->css = [$this->url . $this->version . '/quill.bubble.css'];
                 break;
+
             default:
                 $this->css = [$this->url . $this->version . '/quill.core.css'];
         }
