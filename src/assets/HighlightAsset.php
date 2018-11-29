@@ -1,20 +1,11 @@
 <?php
 
-namespace bizley\quill;
+namespace bizley\quill\assets;
 
 use yii\web\AssetBundle;
 
 /**
  * Highlight.js assets.
- * 
- * @author Paweł Bizley Brzozowski
- * @version 2.0
- * @license Apache 2.0
- * https://github.com/bizley/yii2-quill
- * 
- * Quill can be found at
- * https://quilljs.com/
- * https://github.com/quilljs/quill/
  * 
  * Highlight.js can be found at
  * https://highlightjs.org/

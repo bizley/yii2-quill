@@ -1,20 +1,11 @@
 <?php
 
-namespace bizley\quill;
+namespace bizley\quill\assets;
 
 use yii\web\AssetBundle;
 
 /**
  * KaTeX assets.
- * 
- * @author Paweł Bizley Brzozowski
- * @version 2.0
- * @license Apache 2.0
- * https://github.com/bizley/yii2-quill
- * 
- * Quill can be found at
- * https://quilljs.com/
- * https://github.com/quilljs/quill/
  * 
  * KaTeX can be found at
  * https://khan.github.io/KaTeX/
@@ -26,8 +17,8 @@ class KatexAsset extends AssetBundle
      * @var string CDN URL.
      * @since 2.0
      */
-    public $url = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/';
-    
+    public $url = 'https://cdn.jsdelivr.net/npm/katex@';
+
     /**
      * @var string version to fetch from CDN.
      * @since 2.0
@@ -40,8 +31,8 @@ class KatexAsset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        $this->css = [$this->url . $this->version . '/katex.min.css'];
-        $this->js = [$this->url . $this->version . '/katex.min.js'];
+        $this->css = [$this->url . $this->version . '/dist/katex.min.css'];
+        $this->js = [$this->url . $this->version . '/dist/katex.min.js'];
         
         parent::registerAssetFiles($view);
     }
