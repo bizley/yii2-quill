@@ -22,11 +22,11 @@ Add the package to your `composer.json`:
 
     {
         "require": {
-            "bizley/quill": "^2.0"
+            "bizley/quill": "^2.3"
         }
     }
 
-and run `composer update` or alternatively run `composer require bizley/quill:^2.1`
+and run `composer update` or alternatively run `composer require bizley/quill:^2.3`
 
 ### Usage
 
