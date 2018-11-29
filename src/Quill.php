@@ -120,7 +120,7 @@ class Quill extends InputWidget
      * Version different from default for this release might not work correctly.
      * @since 2.0
      */
-    public $quillVersion = '1.2.0';
+    public $quillVersion = '1.3.6';
     
     /**
      * @var array Quill options.
@@ -131,18 +131,18 @@ class Quill extends InputWidget
     public $configuration;
     
     /**
-     * @var string KaTeX version to fetch from https://cdnjs.cloudflare.com
+     * @var string KaTeX version to fetch from https://cdn.jsdelivr.net
      * Used when Formula module is added.
      * @since 2.0
      */
-    public $katexVersion = '0.7.1';
+    public $katexVersion = '0.10.0';
     
     /**
      * @var string Highlight.js version to fetch from https://cdnjs.cloudflare.com
      * Used when Syntax module is added.
      * @since 2.0
      */
-    public $highlightVersion = '9.9.0';
+    public $highlightVersion = '9.13.1';
     
     /**
      * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
@@ -345,24 +345,76 @@ class Quill extends InputWidget
     {
         if ($this->toolbarOptions === self::TOOLBAR_BASIC) {
             return [
-                ['bold', 'italic', 'underline', 'strike'], 
-                [['list' => 'ordered'], ['list' => 'bullet']], 
-                [['align' => []]], 
-                ['link']
+                [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strike',
+                ],
+                [
+                    ['list' => 'ordered'],
+                    ['list' => 'bullet'],
+                ],
+                [
+                    ['align' => []],
+                ],
+                [
+                    'link',
+                ],
             ];
         }
 
         if ($this->toolbarOptions === self::TOOLBAR_FULL) {
             return [
-                [['font' => []], ['size' => ['small', false, 'large', 'huge']]],
-                ['bold', 'italic', 'underline', 'strike'],
-                [['color' => []], ['background' => []]],
-                [['script' => 'sub'], ['script' => 'super']],
-                [['header' => 1], ['header' => 2], 'blockquote', 'code-block'],
-                [['list' => 'ordered'], ['list' => 'bullet'], ['indent' => '-1'], ['indent' => '+1']],
-                [['direction' => 'rtl'], ['align' => []]],
-                ['link', 'image', 'video'],
-                ['clean']
+                [
+                    ['font' => []],
+                    [
+                        'size' => [
+                            'small',
+                            false,
+                            'large',
+                            'huge',
+                        ],
+                    ],
+                ],
+                [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strike',
+                ],
+                [
+                    ['color' => []],
+                    ['background' => []],
+                ],
+                [
+                    ['script' => 'sub'],
+                    ['script' => 'super'],
+                ],
+                [
+                    ['header' => 1],
+                    ['header' => 2],
+                    'blockquote',
+                    'code-block',
+                ],
+                [
+                    ['list' => 'ordered'],
+                    ['list' => 'bullet'],
+                    ['indent' => '-1'],
+                    ['indent' => '+1'],
+                ],
+                [
+                    ['direction' => 'rtl'],
+                    ['align' => []],
+                ],
+                [
+                    'link',
+                    'image',
+                    'video',
+                ],
+                [
+                    'clean',
+                ],
             ];
         }
 
