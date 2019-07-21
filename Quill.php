@@ -240,7 +240,7 @@ class Quill extends InputWidget
                 $this->_quillConfiguration['placeholder'] = $this->placeholder;
             }
             if (!empty($this->formats)) {
-                $this->_quillConfiguration['formates'] = $this->formats;
+                $this->_quillConfiguration['formats'] = $this->formats;
             }
             
             if (!empty($this->modules)) {
