@@ -24,7 +24,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 2.3.1
+ * @version 2.4.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
