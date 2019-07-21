@@ -24,7 +24,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  * 
  * @author Paweł Bizley Brzozowski
- * @version 2.3.0
+ * @version 2.3.1
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  * 
@@ -135,14 +135,14 @@ class Quill extends InputWidget
      * Used when Formula module is added.
      * @since 2.0
      */
-    public $katexVersion = '0.10.0';
+    public $katexVersion = '0.10.2';
     
     /**
      * @var string Highlight.js version to fetch from https://cdnjs.cloudflare.com
      * Used when Syntax module is added.
      * @since 2.0
      */
-    public $highlightVersion = '9.13.1';
+    public $highlightVersion = '9.15.8';
     
     /**
      * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
@@ -255,7 +255,7 @@ class Quill extends InputWidget
             }
 
             if (!empty($this->formats)) {
-                $this->_quillConfiguration['formates'] = $this->formats;
+                $this->_quillConfiguration['formats'] = $this->formats;
             }
             
             if (!empty($this->modules)) {
