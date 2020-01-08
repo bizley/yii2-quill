@@ -4,10 +4,11 @@ namespace bizley\quill\assets;
 
 use bizley\quill\Quill;
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Quill assets.
- * 
+ *
  * Quill can be found at
  * https://quilljs.com/
  * https://github.com/quilljs/quill/
@@ -34,7 +35,7 @@ class QuillAsset extends AssetBundle
     
     /**
      * Register CSS and JS file based on theme and version.
-     * @param \yii\web\View $view the view that the asset files are to be registered with.
+     * @param View $view the view that the asset files are to be registered with.
      */
     public function registerAssetFiles($view)
     {
