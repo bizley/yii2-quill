@@ -14,20 +14,20 @@ use yii\widgets\InputWidget;
 
 /**
  * Quill editor implementation for Yii 2.
- * 
+ *
  * Use it as an active field:
  * <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::class, []) ?>
  *
  * Or as a standalone widget:
  * <?= \bizley\quill\Quill::widget(['name' => 'editor']) ?>
- * 
+ *
  * See the documentation for more details.
- * 
+ *
  * @author Paweł Bizley Brzozowski
- * @version 2.4.0
+ * @version 2.5.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
- * 
+ *
  * Quill itself can be found at
  * https://quilljs.com/
  * https://github.com/quilljs/quill/
@@ -120,7 +120,7 @@ class Quill extends InputWidget
      * Version different from default for this release might not work correctly.
      * @since 2.0
      */
-    public $quillVersion = '1.3.6';
+    public $quillVersion = '1.3.7';
     
     /**
      * @var array Quill options.
@@ -135,17 +135,17 @@ class Quill extends InputWidget
      * Used when Formula module is added.
      * @since 2.0
      */
-    public $katexVersion = '0.10.2';
+    public $katexVersion = '0.11.1';
     
     /**
-     * @var string Highlight.js version to fetch from https://cdnjs.cloudflare.com
+     * @var string Highlight.js version to fetch from https://cdn.jsdelivr.net
      * Used when Syntax module is added.
      * @since 2.0
      */
-    public $highlightVersion = '9.15.8';
+    public $highlightVersion = '9.17.1';
     
     /**
-     * @var string Highlight.js stylesheet to fetch from https://cdnjs.cloudflare.com
+     * @var string Highlight.js stylesheet to fetch from https://cdn.jsdelivr.net
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
      * Used when Syntax module is added.
      * @since 2.0
@@ -153,10 +153,17 @@ class Quill extends InputWidget
     public $highlightStyle = 'default.min.css';
     
     /**
-     * @var array HTML attributes for the input tag.
+     * @var array HTML attributes for the input tag (editor box).
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['style' => 'min-height:150px;'];
+
+    /**
+     * @var array HTML attributes for the hidden input tag (field keeping raw HTML text).
+     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @since 2.5.0
+     */
+    public $hiddenOptions = [];
     
     /**
      * @var string HTML tag for the editor.
@@ -165,7 +172,7 @@ class Quill extends InputWidget
     public $tag = 'div';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static $autoIdPrefix = 'quill-';
     
@@ -181,7 +188,7 @@ class Quill extends InputWidget
     protected $_quillConfiguration = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      * @throws InvalidConfigException
      */
     public function init()
@@ -213,8 +220,14 @@ class Quill extends InputWidget
         
         $this->prepareOptions();
     }
-    
+
+    /**
+     * @var bool
+     */
     private $_katex = false;
+    /**
+     * @var bool
+     */
     private $_highlight = false;
     
     /**
@@ -236,7 +249,6 @@ class Quill extends InputWidget
             }
 
             $this->_quillConfiguration = $this->configuration;
-
         } else {
             if (!empty($this->theme)) {
                 $this->_quillConfiguration['theme'] = $this->theme;
@@ -279,25 +291,21 @@ class Quill extends InputWidget
     }
     
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {
         $this->registerClientScript();
 
+        $hiddenOptions = \array_merge($this->hiddenOptions, ['id' => $this->_fieldId]);
+
         if ($this->hasModel()) {
-            return Html::activeHiddenInput(
-                    $this->model, $this->attribute, ['id' => $this->_fieldId]
-                ) . Html::tag(
-                    $this->tag, $this->model->{$this->attribute}, $this->options
-                );
+            return Html::activeHiddenInput($this->model, $this->attribute, $hiddenOptions)
+                . Html::tag($this->tag, $this->model->{$this->attribute}, $this->options);
         }
 
-        return Html::hiddenInput(
-                $this->name, $this->value, ['id' => $this->_fieldId]
-            ) . Html::tag(
-                $this->tag, $this->value, $this->options
-            );
+        return Html::hiddenInput($this->name, $this->value, $hiddenOptions)
+            . Html::tag($this->tag, $this->value, $this->options);
     }
     
     /**
@@ -324,14 +332,14 @@ class Quill extends InputWidget
         $asset->version = $this->quillVersion;
         
         $configs = Json::encode($this->_quillConfiguration);
-        $editor = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
+        $editor = 'q_' . \preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
         
         $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "document.getElementById(\"editor-{$this->id}\").onclick=function(e){document.querySelector(\"#editor-{$this->id} .ql-editor\").focus();};";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
 
         if (!empty($this->js)) {
-            $js .= str_replace('{quill}', $editor, $this->js);
+            $js .= \str_replace('{quill}', $editor, $this->js);
         }
 
         $view->registerJs($js, View::POS_END);

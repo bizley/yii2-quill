@@ -18,26 +18,37 @@ You can find Quill at https://quilljs.com/
 
 ### Installation
 
-Add the package to your `composer.json`:
+Run console command
 
-    {
-        "require": {
-            "bizley/quill": "^2.3"
-        }
+```
+composer require bizley/quill:^2.5
+```
+
+Or add the package to your `composer.json`:
+
+```json
+{
+    "require": {
+        "bizley/quill": "^2.5"
     }
+}
+```
 
-and run `composer update` or alternatively run `composer require bizley/quill:^2.3`
+and run `composer update`.
 
 ### Usage
 
 Use it as an active field extension  
 
-    <?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::class, []) ?>
+```php
+<?= $form->field($model, $attribute)->widget(\bizley\quill\Quill::class, []) ?>
+```
 
 Or as a standalone widget
-  
-    <?= \bizley\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>
 
+```php  
+<?= \bizley\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>
+```
 
 ### Basic parameters
 
@@ -80,20 +91,22 @@ add the following code in widget configuration:
 
 ## Additional information
 
-### Container and form's input
+### Container and form's inputs
 
-Quill editor is rendered in `div` container (this can be changed by setting `'tag'` parameter) 
-and edited content is copied to hidden input field so it can be used in forms.
+Quill editor is rendered in `div` container (this can be changed by setting `'tag'` parameter) and edited content is 
+copied to hidden input field so it can be used in forms. You can modify container's HTML attributes by setting 
+`'options'` parameter and hidden field HTML attributes by setting `'hiddenOptions'` parameter. 
 
 ### Editor box's height
 
-Default editor height is *150px* (this can be changed by setting `'options'` parameter) and 
-its box extends as new text lines are added.
+Default editor height is *150px* (this can be changed by setting `'options'` parameter) and its box extends as new text 
+lines are added.
 
 ### Quill source
 
-Quill's JS code is provided by CDN. You can change the Quill's version set with the current yii2-quill's 
-release by changing `'quillVersion'` parameter but some options may not work correctly in this case.
+Quill's JS code is provided by CDN since there is no build version of it at the repository package. You can change the 
+Quill's version set with the current yii2-quill's release by changing `'quillVersion'` parameter but some options may 
+not work correctly in this case.
 
 ### Additional JavaScript code
 
@@ -147,4 +160,5 @@ To add this option configure widget with [Syntax Highlighter module](https://qui
 
 You can change the version of highlight.js by setting the `'highlightVersion'` parameter.  
 You can change the default highlight.js stylesheet by setting the `'highlightStyle'` parameter. 
-See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) (all files ending with `.min.css`).
+See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) (all files ending 
+with `.min.css`).
