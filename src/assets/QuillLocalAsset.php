@@ -13,7 +13,7 @@ use yii\web\View;
  * https://quilljs.com/
  * https://github.com/quilljs/quill/
  */
-class LocalQuillAsset extends AssetBundle
+class QuillLocalAsset extends AssetBundle
 {
     /**
      * @var string

@@ -3,9 +3,11 @@
 namespace bizley\quill;
 
 use bizley\quill\assets\HighlightAsset;
+use bizley\quill\assets\HighlightLocalAsset;
 use bizley\quill\assets\KatexAsset;
-use bizley\quill\assets\LocalQuillAsset;
+use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
+use bizley\quill\assets\QuillLocalAsset;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -119,6 +121,7 @@ class Quill extends InputWidget
     /**
      * @var string Quill version to fetch from https://cdn.quilljs.com
      * Version different from default for this release might not work correctly.
+     * This property is skipped if $localAssets is set to true (Quill is in default version then).
      * @since 2.0.0
      */
     public $quillVersion = '1.3.7';
@@ -134,6 +137,7 @@ class Quill extends InputWidget
     /**
      * @var string KaTeX version to fetch from https://cdn.jsdelivr.net
      * Used when Formula module is added.
+     * This property is skipped if $localAssets is set to true (KaTeX is in default version then).
      * @since 2.0.0
      */
     public $katexVersion = '0.11.1';
@@ -141,6 +145,7 @@ class Quill extends InputWidget
     /**
      * @var string Highlight.js version to fetch from https://cdn.jsdelivr.net
      * Used when Syntax module is added.
+     * This property is skipped if $localAssets is set to true (Highlight.js is in default version then).
      * @since 2.0.0
      */
     public $highlightVersion = '9.17.1';
@@ -149,6 +154,7 @@ class Quill extends InputWidget
      * @var string Highlight.js stylesheet to fetch from https://cdn.jsdelivr.net
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
      * Used when Syntax module is added.
+     * This property is skipped if $localAssets is set to true (Highlight.js is using default style then).
      * @since 2.0.0
      */
     public $highlightStyle = 'default.min.css';
@@ -328,18 +334,26 @@ class Quill extends InputWidget
         $view = $this->view;
         
         if ($this->_katex) {
-            $katexAsset = KatexAsset::register($view);
-            $katexAsset->version = $this->katexVersion;
+            if ($this->localAssets) {
+                KatexLocalAsset::register($view);
+            } else {
+                $katexAsset = KatexAsset::register($view);
+                $katexAsset->version = $this->katexVersion;
+            }
         }
 
         if ($this->_highlight) {
-            $highlightAsset = HighlightAsset::register($view);
-            $highlightAsset->version = $this->highlightVersion;
-            $highlightAsset->style = $this->highlightStyle;
+            if ($this->localAssets) {
+                HighlightLocalAsset::register($view);
+            } else {
+                $highlightAsset = HighlightAsset::register($view);
+                $highlightAsset->version = $this->highlightVersion;
+                $highlightAsset->style = $this->highlightStyle;
+            }
         }
 
         if ($this->localAssets) {
-            $asset = LocalQuillAsset::register($view);
+            $asset = QuillLocalAsset::register($view);
         } else {
             $asset = QuillAsset::register($view);
             $asset->version = $this->quillVersion;
