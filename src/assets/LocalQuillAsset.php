@@ -4,6 +4,7 @@ namespace bizley\quill\assets;
 
 use bizley\quill\Quill;
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Local Quill assets (1.3.7).
@@ -29,10 +30,12 @@ class LocalQuillAsset extends AssetBundle
      */
     public $theme;
 
-    public function init()
+    /**
+     * Registers CSS file based on theme.
+     * @param View $view the view that the asset files are to be registered with.
+     */
+    public function registerAssetFiles($view)
     {
-        parent::init();
-
         switch ($this->theme) {
             case Quill::THEME_SNOW:
                 $this->css = ['quill.snow.css'];
@@ -45,5 +48,7 @@ class LocalQuillAsset extends AssetBundle
             default:
                 $this->css = ['quill.core.css'];
         }
+
+        parent::registerAssetFiles($view);
     }
 }
