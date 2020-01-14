@@ -4,6 +4,7 @@ namespace bizley\quill;
 
 use bizley\quill\assets\HighlightAsset;
 use bizley\quill\assets\KatexAsset;
+use bizley\quill\assets\LocalQuillAsset;
 use bizley\quill\assets\QuillAsset;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
@@ -24,7 +25,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 2.5.0
+ * @version 2.6.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
@@ -55,7 +56,7 @@ class Quill extends InputWidget
      * Set true to get theme default buttons.
      * You can use above constants for predefined set of buttons.
      * For other options see README and https://quilljs.com/docs/modules/toolbar/
-     * @since 2.0
+     * @since 2.0.0
      */
     public $toolbarOptions = true;
     
@@ -63,7 +64,7 @@ class Quill extends InputWidget
      * @var string Placeholder text to be displayed in the editor field.
      * Leave empty for default value.
      * This property is skipped if $configuration is set.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $placeholder;
     
@@ -72,7 +73,7 @@ class Quill extends InputWidget
      * It will be automatically wrapped in JsExpression.
      * Leave empty for default value.
      * This property is skipped if $configuration is set.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $bounds;
     
@@ -80,7 +81,7 @@ class Quill extends InputWidget
      * @var string Static method enabling logging messages at a given level: 'error', 'warn', 'log', or 'info'.
      * Leave empty for default value (false).
      * This property is skipped if $configuration is set.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $debug;
     
@@ -88,7 +89,7 @@ class Quill extends InputWidget
      * @var array Whitelist of formats to allow in the editor.
      * Leave empty for default list (all allowed).
      * This property is skipped if $configuration is set.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $formats;
     
@@ -96,7 +97,7 @@ class Quill extends InputWidget
      * @var array Collection of modules to include and respective options.
      * This property is skipped if $configuration is set.
      * Notice: if you set 'toolbar' module it will replace $toolbarOptions configuration.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $modules;
     
@@ -104,21 +105,21 @@ class Quill extends InputWidget
      * @var bool Whether to instantiate the editor in read-only mode.
      * Leave empty for default value (false).
      * This property is skipped if $configuration is set.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $readOnly;
     
     /**
      * @var string Additional JS code to be called with the editor.
      * Use placeholder {quill} to get the current editor object variable's name.
-     * @since 1.1
+     * @since 1.1.0
      */
     public $js;
     
     /**
      * @var string Quill version to fetch from https://cdn.quilljs.com
      * Version different from default for this release might not work correctly.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $quillVersion = '1.3.7';
     
@@ -126,21 +127,21 @@ class Quill extends InputWidget
      * @var array Quill options.
      * Set this to override all other parameters and configure Quill manually.
      * See https://quilljs.com/docs/configuration/ for details.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $configuration;
     
     /**
      * @var string KaTeX version to fetch from https://cdn.jsdelivr.net
      * Used when Formula module is added.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $katexVersion = '0.11.1';
     
     /**
      * @var string Highlight.js version to fetch from https://cdn.jsdelivr.net
      * Used when Syntax module is added.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $highlightVersion = '9.17.1';
     
@@ -148,7 +149,7 @@ class Quill extends InputWidget
      * @var string Highlight.js stylesheet to fetch from https://cdn.jsdelivr.net
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
      * Used when Syntax module is added.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $highlightStyle = 'default.min.css';
     
@@ -167,9 +168,15 @@ class Quill extends InputWidget
     
     /**
      * @var string HTML tag for the editor.
-     * @since 2.0
+     * @since 2.0.0
      */
     public $tag = 'div';
+
+    /**
+     * @var bool Whether to use local versions of assets instead of CDNs.
+     * @since 2.6.0
+     */
+    public $localAssets = false;
 
     /**
      * {@inheritdoc}
@@ -183,7 +190,7 @@ class Quill extends InputWidget
     
     /**
      * @var array
-     * @since 2.0
+     * @since 2.0.0
      */
     protected $_quillConfiguration = [];
 
@@ -269,6 +276,10 @@ class Quill extends InputWidget
             if (!empty($this->formats)) {
                 $this->_quillConfiguration['formats'] = $this->formats;
             }
+
+            if ($this->readOnly !== null && (bool)$this->readOnly) {
+                $this->_quillConfiguration['readOnly'] = true;
+            }
             
             if (!empty($this->modules)) {
                 foreach ($this->modules as $module => $config) {
@@ -326,10 +337,14 @@ class Quill extends InputWidget
             $highlightAsset->version = $this->highlightVersion;
             $highlightAsset->style = $this->highlightStyle;
         }
-        
-        $asset = QuillAsset::register($view);
+
+        if ($this->localAssets) {
+            $asset = LocalQuillAsset::register($view);
+        } else {
+            $asset = QuillAsset::register($view);
+            $asset->version = $this->quillVersion;
+        }
         $asset->theme = $this->theme;
-        $asset->version = $this->quillVersion;
         
         $configs = Json::encode($this->_quillConfiguration);
         $editor = 'q_' . \preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
