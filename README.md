@@ -21,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^2.5
+composer require bizley/quill:^2.6
 ```
 
 Or add the package to your `composer.json`:
@@ -29,7 +29,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^2.5"
+        "bizley/quill": "^2.6"
     }
 }
 ```
