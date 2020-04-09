@@ -138,7 +138,7 @@ class Quill extends InputWidget
      * This property is skipped if $localAssets is set to true (Highlight.js is in default version then).
      * @since 2.0.0
      */
-    public $highlightVersion = '9.17.1';
+    public $highlightVersion = '9.18.1';
     /**
      * @var string Highlight.js stylesheet to fetch from https://cdn.jsdelivr.net
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
@@ -146,7 +146,7 @@ class Quill extends InputWidget
      * This property is skipped if $localAssets is set to true (Highlight.js is using default style then).
      * @since 2.0.0
      */
-    public $highlightStyle = 'default.min.css';
+    public $highlightStyle = 'default.css';
     /**
      * @var array HTML attributes for the input tag (editor box).
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
@@ -406,7 +406,8 @@ class Quill extends InputWidget
 
         if ($this->_highlight) {
             if ($this->localAssets) {
-                HighlightLocalAsset::register($view);
+                $highlightAsset = HighlightLocalAsset::register($view);
+                $highlightAsset->style = $this->highlightStyle;
             } else {
                 $highlightAsset = HighlightAsset::register($view);
                 $highlightAsset->version = $this->highlightVersion;

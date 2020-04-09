@@ -55,7 +55,9 @@ class QuillLocalAsset extends AssetBundle
                 break;
 
             default:
-                $this->css['theme'] = $this->theme;
+                if (null !== $this->theme) {
+                    $this->css['theme'] = $this->theme;
+                }
         }
 
         parent::registerAssetFiles($view);

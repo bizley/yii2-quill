@@ -16,19 +16,36 @@ class HighlightLocalAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@npm/highlightjs';
+    public $sourcePath = '@npm/highlight.js';
 
     /**
      * @var array
      */
     public $js = [
-        'highlight.pack.min.js'
+        'lib/highlight.js'
     ];
+
+    /**
+     * @var string stylesheet to use.
+     * @since 2.0
+     */
+    public $style;
 
     /**
      * @var array
      */
     public $css = [
-        'styles/default.css'
+        'style' => 'styles/default.css'
     ];
+
+    /**
+     * Registers CSS and JS file based on version.
+     * @param \yii\web\View $view the view that the asset files are to be registered with.
+     */
+    public function registerAssetFiles($view)
+    {
+        $this->css['style'] = 'styles/' . $this->style;
+
+        parent::registerAssetFiles($view);
+    }
 }
