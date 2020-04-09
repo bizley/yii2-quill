@@ -16,15 +16,19 @@ class HighlightLocalAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@bizley/quill/assets/highlightjs';
+    public $sourcePath = '@npm/highlightjs';
 
     /**
      * @var array
      */
-    public $js = ['highlight.min.js'];
+    public $js = [
+        'highlight.pack.min.js'
+    ];
 
     /**
      * @var array
      */
-    public $css = ['default.min.css'];
+    public $css = [
+        'styles/default.css'
+    ];
 }
