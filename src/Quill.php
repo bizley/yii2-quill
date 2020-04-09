@@ -9,7 +9,9 @@ use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
 use bizley\quill\assets\QuillLocalAsset;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\web\JsExpression;
 use yii\web\View;
@@ -234,8 +236,8 @@ class Quill extends InputWidget
             throw new InvalidConfigException('The "modules" property must be an array!');
         }
 
-        if (!empty($this->icons) && ! is_array($this->icons)) {
-            throw new InvalidConfigException('The "icons" property must be an array!');
+        if (!empty($this->icons) && (!is_array($this->icons) || !ArrayHelper::isAssociative($this->icons))) {
+            throw new InvalidConfigException('The "icons" property must be an associative array!');
         }
         
         parent::init();
@@ -373,9 +375,19 @@ class Quill extends InputWidget
         $asset->theme = $this->theme;
         
         $configs = Json::encode($this->_quillConfiguration);
-        $editor = 'q_' . \preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
+        $editor = 'q_' . Inflector::slug($this->id, '_');
+
+        $js = '';
+        if (!empty($this->icons)) {
+            $js .= "var {$editor}_icons = Quill.import('ui/icons');";
+            foreach ($this->icons as $key => $icon) {
+                $icon = Json::encode($icon);
+                $key = Inflector::slug($key);
+                $js .= "{$editor}_icons['$key'] = $icon;";
+            }
+        }
         
-        $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
+        $js .= "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
 
         if (!empty($this->js)) {
