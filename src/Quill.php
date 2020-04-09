@@ -61,6 +61,14 @@ class Quill extends InputWidget
      * @since 2.0.0
      */
     public $toolbarOptions = true;
+
+    /**
+     * @var array Icon array
+     * Override icons
+     * @see https://github.com/quilljs/quill/issues/1099
+     * @since 2.6.2
+     */
+    public $icons = [];
     
     /**
      * @var string Placeholder text to be displayed in the editor field.
@@ -224,6 +232,10 @@ class Quill extends InputWidget
 
         if (!empty($this->modules) && !\is_array($this->modules)) {
             throw new InvalidConfigException('The "modules" property must be an array!');
+        }
+
+        if (!empty($this->icons) && ! is_array($this->icons)) {
+            throw new InvalidConfigException('The "icons" property must be an array!');
         }
         
         parent::init();
