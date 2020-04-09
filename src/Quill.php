@@ -143,10 +143,11 @@ class Quill extends InputWidget
      * @var string Highlight.js stylesheet to fetch from https://cdn.jsdelivr.net
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
      * Used when Syntax module is added.
-     * This property is skipped if $localAssets is set to true (Highlight.js is using default style then).
+     * Provide just the name of stylesheet (skip ".css" or ".min.css").
+     * Since 2.7.0 this property works also for $localAssets set to true.
      * @since 2.0.0
      */
-    public $highlightStyle = 'default.css';
+    public $highlightStyle = 'default';
     /**
      * @var array HTML attributes for the input tag (editor box).
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.

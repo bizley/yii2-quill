@@ -38,7 +38,8 @@ class HighlightAsset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        $this->css = [$this->url . $this->version . '/build/styles/' . $this->style];
+        $style = substr($this->style, -8) === '.min.css' ? $this->style : $this->style . '.min.css';
+        $this->css = [$this->url . $this->version . '/build/styles/' . $style];
         $this->js = [$this->url . $this->version . '/build/highlight.min.js'];
 
         parent::registerAssetFiles($view);

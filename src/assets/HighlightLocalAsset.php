@@ -44,7 +44,8 @@ class HighlightLocalAsset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        $this->css['style'] = 'styles/' . $this->style;
+        $style = preg_replace('#(\.min)?\.css$#', '', $this->style);
+        $this->css['style'] = 'styles/' . $style . '.css';
 
         parent::registerAssetFiles($view);
     }
