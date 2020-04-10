@@ -3,6 +3,9 @@
 ![Latest Stable Version](https://img.shields.io/packagist/v/bizley/quill.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/bizley/quill.svg)](https://packagist.org/packages/bizley/quill)
 ![License](https://img.shields.io/packagist/l/bizley/quill.svg)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/build-status/master)
 
 *Yii 2 implementation of Quill, modern WYSIWYG editor.*
 
