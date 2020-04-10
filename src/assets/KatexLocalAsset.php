@@ -5,7 +5,7 @@ namespace bizley\quill\assets;
 use yii\web\AssetBundle;
 
 /**
- * Local KaTeX assets (0.11.1).
+ * Local KaTeX assets.
  *
  * KaTeX can be found at
  * https://khan.github.io/KaTeX/
@@ -13,22 +13,12 @@ use yii\web\AssetBundle;
  */
 class KatexLocalAsset extends AssetBundle
 {
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritdoc} */
     public $sourcePath = '@npm/katex/dist';
 
-    /**
-     * {@inheritDoc}
-     */
-    public $js = [
-        'katex.min.js'
-    ];
+    /** {@inheritdoc} */
+    public $js = ['katex.min.js'];
 
-    /**
-     * {@inheritDoc}
-     */
-    public $css = [
-        'katex.min.css'
-    ];
+    /** {@inheritdoc} */
+    public $css = ['katex.min.css'];
 }

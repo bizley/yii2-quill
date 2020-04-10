@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 use yii\web\View;
 
 /**
- * Local Quill assets (1.3.7).
+ * Local Quill assets.
  *
  * Quill can be found at
  * https://quilljs.com/
@@ -15,28 +15,18 @@ use yii\web\View;
  */
 class QuillLocalAsset extends AssetBundle
 {
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritdoc} */
     public $sourcePath = '@npm/quill/dist';
 
-    /**
-     * {@inheritDoc}
-     */
-    public $js = [
-        'quill.min.js'
-    ];
+    /** {@inheritdoc} */
+    public $js = ['quill.min.js'];
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritdoc} */
     public $css = [
         'theme' => 'quill.core.css'
     ];
 
-    /**
-     * @var string editor theme
-     */
+    /** @var string editor theme */
     public $theme;
 
     /**
