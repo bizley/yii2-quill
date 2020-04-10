@@ -325,7 +325,7 @@ class Quill extends InputWidget
      */
     public function setKatex($katex)
     {
-        $this->_katex = (bool)$katex;
+        $this->_katex = (bool) $katex;
     }
 
     /** @var bool */
@@ -348,7 +348,7 @@ class Quill extends InputWidget
      */
     public function setHighlightJs($highlightJs)
     {
-        $this->_highlightJs = (bool)$highlightJs;
+        $this->_highlightJs = (bool) $highlightJs;
     }
 
     /** Prepares Quill configuration */
@@ -389,7 +389,7 @@ class Quill extends InputWidget
                 $this->addConfig('formats', $this->formats);
             }
 
-            if ($this->readOnly !== null && (bool)$this->readOnly) {
+            if ($this->readOnly !== null && (bool) $this->readOnly) {
                 $this->addConfig('readOnly', true);
             }
 
