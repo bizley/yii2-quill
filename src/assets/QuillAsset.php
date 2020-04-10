@@ -20,19 +20,19 @@ class QuillAsset extends AssetBundle
      * @since 2.0
      */
     public $url = 'https://cdn.quilljs.com/';
-    
+
     /**
      * @var string version to fetch from CDN.
      * Version different from default for this release might not work correctly.
      * @since 2.0
      */
     public $version;
-    
+
     /**
      * @var string editor theme
      */
     public $theme;
-    
+
     /**
      * Register CSS and JS file based on theme and version.
      * @param View $view the view that the asset files are to be registered with.
@@ -51,9 +51,9 @@ class QuillAsset extends AssetBundle
             default:
                 $this->css = [$this->url . $this->version . '/quill.core.css'];
         }
-        
+
         $this->js = [$this->url . $this->version . '/quill.min.js'];
-        
+
         parent::registerAssetFiles($view);
     }
 }

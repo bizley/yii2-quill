@@ -16,15 +16,37 @@ class HighlightLocalAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@bizley/quill/assets/highlightjs';
+    public $sourcePath = '@npm/highlight.js';
 
     /**
      * @var array
      */
-    public $js = ['highlight.min.js'];
+    public $js = [
+        'lib/highlight.js'
+    ];
+
+    /**
+     * @var string stylesheet to use.
+     * @since 2.0
+     */
+    public $style;
 
     /**
      * @var array
      */
-    public $css = ['default.min.css'];
+    public $css = [
+        'style' => 'styles/default.css'
+    ];
+
+    /**
+     * Registers CSS and JS file based on version.
+     * @param \yii\web\View $view the view that the asset files are to be registered with.
+     */
+    public function registerAssetFiles($view)
+    {
+        $style = preg_replace('#(\.min)?\.css$#', '', $this->style);
+        $this->css['style'] = 'styles/' . $style . '.css';
+
+        parent::registerAssetFiles($view);
+    }
 }
