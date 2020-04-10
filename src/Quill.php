@@ -29,7 +29,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 2.6.1
+ * @version 2.7.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
@@ -73,11 +73,14 @@ class Quill extends InputWidget
 
     /**
      * @var array Icon array
-     * Override icons
+     * You can use this option to set custom icons for the buttons i.e.:
+     * ['bold' => '<i class="fa fa-bold" aria-hidden="true"></i>']
+     * will overwrite default icon for "bold" button.
      * @see https://github.com/quilljs/quill/issues/1099
-     * @since 2.6.2
+     * @since 2.7.0
      */
     public $icons = [];
+
     /**
      * @var string Placeholder text to be displayed in the editor field.
      * Leave empty for default value.
@@ -203,20 +206,6 @@ class Quill extends InputWidget
 
     /** @var string ID of the editor */
     protected $_fieldId;
-
-    /**
-     * @var array
-     * @since 2.0.0
-     */
-    protected $_quillConfiguration = [];
-    /**
-     * @var bool
-     */
-    private $_katex = false;
-    /**
-     * @var bool
-     */
-    private $_highlight = false;
 
     /**
      * {@inheritdoc}
@@ -555,7 +544,16 @@ class Quill extends InputWidget
         $configs = Json::encode($this->getConfig());
         $editor = 'q_' . Inflector::slug($this->id, '_');
 
-        $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
+        $js = '';
+        if (!empty($this->icons)) {
+            $js .= "var {$editor}_icons=Quill.import('ui/icons');";
+            foreach ($this->icons as $key => $icon) {
+                $icon = Json::encode($icon);
+                $key = Inflector::slug($key);
+                $js .= "{$editor}_icons['$key']=$icon;";
+            }
+        }
+        $js .= "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
 
         if (!empty($this->js)) {

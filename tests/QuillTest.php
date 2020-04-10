@@ -118,6 +118,30 @@ class QuillTest extends TestCase
     }
 
     /** @test */
+    public function shouldThrowExceptionOnNonArrayIcons()
+    {
+        $this->expectExceptionMessage('The "icons" property must be an associative array!');
+        new Quill(
+            [
+                'name' => 'test',
+                'icons' => 1
+            ]
+        );
+    }
+
+    /** @test */
+    public function shouldThrowExceptionOnNonAssociativeArrayIcons()
+    {
+        $this->expectExceptionMessage('The "icons" property must be an associative array!');
+        new Quill(
+            [
+                'name' => 'test',
+                'icons' => ['abc']
+            ]
+        );
+    }
+
+    /** @test */
     public function shouldPrepareDefaultOptions()
     {
         $quill = new Quill(['name' => 'test']);
@@ -883,6 +907,39 @@ class QuillTest extends TestCase
                 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
                 . 'document.getElementById("quill-0").value=q_quill_0.root.innerHTML;});q_quill_0.test = 1'
+            ],
+            array_values(Yii::$app->view->js[View::POS_END])
+        );
+        Yii::$app = null;
+    }
+
+    /**
+     * @test
+     * @throws InvalidConfigException
+     */
+    public function shouldAddIcons()
+    {
+        static::setApp();
+
+        $this->assertSame(
+            '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
+            (
+            new Quill(
+                [
+                    'name' => 'test',
+                    'icons' => ['bold' => '<i class="fa fa-bold" aria-hidden="true"></i>']
+                ]
+            )
+            )->run()
+        );
+        $this->assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
+        $this->assertSame(
+            [
+                'var q_quill_0_icons=Quill.import(\'ui/icons\');'
+                . 'q_quill_0_icons[\'bold\']="<i class=\"fa fa-bold\" aria-hidden=\"true\"></i>";'
+                . 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
+                . 'q_quill_0.on(\'text-change\',function(){'
+                . 'document.getElementById("quill-0").value=q_quill_0.root.innerHTML;});'
             ],
             array_values(Yii::$app->view->js[View::POS_END])
         );
