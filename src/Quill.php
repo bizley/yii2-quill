@@ -9,7 +9,9 @@ use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
 use bizley\quill\assets\QuillLocalAsset;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\web\JsExpression;
 use yii\web\View;
@@ -69,6 +71,13 @@ class Quill extends InputWidget
      */
     public $toolbarOptions = true;
 
+    /**
+     * @var array Icon array
+     * Override icons
+     * @see https://github.com/quilljs/quill/issues/1099
+     * @since 2.6.2
+     */
+    public $icons = [];
     /**
      * @var string Placeholder text to be displayed in the editor field.
      * Leave empty for default value.
@@ -196,6 +205,20 @@ class Quill extends InputWidget
     protected $_fieldId;
 
     /**
+     * @var array
+     * @since 2.0.0
+     */
+    protected $_quillConfiguration = [];
+    /**
+     * @var bool
+     */
+    private $_katex = false;
+    /**
+     * @var bool
+     */
+    private $_highlight = false;
+
+    /**
      * {@inheritdoc}
      * @throws InvalidConfigException
      */
@@ -219,6 +242,10 @@ class Quill extends InputWidget
 
         if (!empty($this->modules) && !is_array($this->modules)) {
             throw new InvalidConfigException('The "modules" property must be an array!');
+        }
+
+        if (!empty($this->icons) && (!is_array($this->icons) || !ArrayHelper::isAssociative($this->icons))) {
+            throw new InvalidConfigException('The "icons" property must be an associative array!');
         }
 
         parent::init();
@@ -526,7 +553,7 @@ class Quill extends InputWidget
         $asset->theme = $this->theme;
 
         $configs = Json::encode($this->getConfig());
-        $editor = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
+        $editor = 'q_' . Inflector::slug($this->id, '_');
 
         $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
