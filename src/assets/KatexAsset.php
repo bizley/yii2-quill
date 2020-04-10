@@ -25,7 +25,7 @@ class KatexAsset extends AssetBundle
      * @since 2.0
      */
     public $version;
-    
+
     /**
      * Registers CSS and JS file based on version.
      * @param View $view the view that the asset files are to be registered with.
@@ -34,7 +34,7 @@ class KatexAsset extends AssetBundle
     {
         $this->css = [$this->url . $this->version . '/dist/katex.min.css'];
         $this->js = [$this->url . $this->version . '/dist/katex.min.js'];
-        
+
         parent::registerAssetFiles($view);
     }
 }

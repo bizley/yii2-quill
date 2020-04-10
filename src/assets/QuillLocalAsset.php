@@ -16,14 +16,23 @@ use yii\web\View;
 class QuillLocalAsset extends AssetBundle
 {
     /**
-     * @var string
+     * {@inheritDoc}
      */
-    public $sourcePath = '@bizley/quill/assets/quill';
+    public $sourcePath = '@npm/quill/dist';
 
     /**
-     * @var array
+     * {@inheritDoc}
      */
-    public $js = ['quill.min.js'];
+    public $js = [
+        'quill.min.js'
+    ];
+
+    /**
+     * {@inheritDoc}
+     */
+    public $css = [
+        'theme' => 'quill.core.css'
+    ];
 
     /**
      * @var string editor theme
@@ -38,15 +47,17 @@ class QuillLocalAsset extends AssetBundle
     {
         switch ($this->theme) {
             case Quill::THEME_SNOW:
-                $this->css = ['quill.snow.css'];
+                $this->css['theme'] = 'quill.snow.css';
                 break;
 
             case Quill::THEME_BUBBLE:
-                $this->css = ['quill.bubble.css'];
+                $this->css['theme'] = 'quill.bubble.css';
                 break;
 
             default:
-                $this->css = ['quill.core.css'];
+                if (null !== $this->theme) {
+                    $this->css['theme'] = $this->theme;
+                }
         }
 
         parent::registerAssetFiles($view);

@@ -14,17 +14,21 @@ use yii\web\AssetBundle;
 class KatexLocalAsset extends AssetBundle
 {
     /**
-     * @var string
+     * {@inheritDoc}
      */
-    public $sourcePath = '@bizley/quill/assets/katex';
+    public $sourcePath = '@npm/katex/dist';
 
     /**
-     * @var array
+     * {@inheritDoc}
      */
-    public $js = ['katex.min.js'];
+    public $js = [
+        'katex.min.js'
+    ];
 
     /**
-     * @var array
+     * {@inheritDoc}
      */
-    public $css = ['katex.min.css'];
+    public $css = [
+        'katex.min.css'
+    ];
 }
