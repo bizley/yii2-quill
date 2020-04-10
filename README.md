@@ -21,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^2.6
+composer require bizley/quill:^2.7
 ```
 
 Or add the package to your `composer.json`:
@@ -29,7 +29,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^2.6"
+        "bizley/quill": "^2.7"
     }
 }
 ```
@@ -104,10 +104,26 @@ lines are added.
 
 ### Quill source
 
-Quill's JS code is provided by CDN by default since there is no build version of it at the repository package. You can 
-change the Quill's version set with the current yii2-quill's release by changing `'quillVersion'` parameter but some 
-options may not work correctly in this case. Starting from version 2.6.0 you can use local assets for Quill but you are 
-then tied to one version of it.
+By default Quill is provided through the CDN (https://cdn.quilljs.com). You can change the Quill's version set with the 
+current yii2-quill's release by changing `'quillVersion'` parameter but some options may not work correctly in this case. 
+Starting from version 2.7.0 you can use local assets for Quill provided through NPM packet manager - to do 
+so run
+
+```
+composer require npm-asset/quill:^1.3
+```
+
+Or add the package to your `composer.json`:
+
+```json
+{
+    "require": {
+        "npm-asset/quill": "^1.3"
+    }
+}
+```
+
+You also need to set `['localAssets' => true]` in Quill's configuration.
 
 ### Additional JavaScript code
 
@@ -143,7 +159,25 @@ To add this option configure widget with [Formula module](https://quilljs.com/do
 ]
 ```
 
-You can change the version of KaTeX by setting the `'katexVersion'` parameter.
+By default KaTeX is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of KaTeX by setting 
+the `'katexVersion'` parameter. Starting from version 2.7.0 you can use local assets for KaTeX provided through NPM 
+packet manager - to do so run
+
+```
+composer require npm-asset/katex:^0.11
+```
+
+Or add the package to your `composer.json`:
+
+```json
+{
+    "require": {
+        "npm-asset/katex": "^0.11"
+    }
+}
+```
+
+You also need to set `['localAssets' => true]` in Quill's configuration.
 
 ### Syntax Highlighter module
 
@@ -159,12 +193,25 @@ To add this option configure widget with [Syntax Highlighter module](https://qui
 ]
 ```
 
-You can change the version of highlight.js by setting the `'highlightVersion'` parameter.  
-You can change the default highlight.js stylesheet by setting the `'highlightStyle'` parameter. 
-See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles) (all files ending 
-with `.min.css`).
+By default highlight.js is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of 
+highlight.js by setting the `'highlightVersion'` parameter. Starting from version 2.7.0 you can use local assets for 
+highlight.js provided through NPM packet manager - to do so run
 
-### Local assets
+```
+composer require npm-asset/highlight.js:^9.18
+```
 
-Quill, KaTeX, and Highlight.js are all provided through CDN by default. If you want to use local versions instead set 
-`'localAssets'` parameter to `true`.
+Or add the package to your `composer.json`:
+
+```json
+{
+    "require": {
+        "npm-asset/highlight.js": "^9.18"
+    }
+}
+```
+
+You also need to set `['localAssets' => true]` in Quill's configuration.
+
+You can change the default highlight.js stylesheet (for both CDN and local version) by setting the `'highlightStyle'` 
+parameter. See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles).

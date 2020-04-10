@@ -5,7 +5,7 @@ namespace bizley\quill\assets;
 use yii\web\AssetBundle;
 
 /**
- * Local Highlight.js assets (9.17.1).
+ * Local Highlight.js assets.
  *
  * Highlight.js can be found at
  * https://highlightjs.org/
@@ -13,17 +13,11 @@ use yii\web\AssetBundle;
  */
 class HighlightLocalAsset extends AssetBundle
 {
-    /**
-     * @var string
-     */
+    /** {@inheritdoc} */
     public $sourcePath = '@npm/highlight.js';
 
-    /**
-     * @var array
-     */
-    public $js = [
-        'lib/highlight.js'
-    ];
+    /** {@inheritdoc} */
+    public $js = ['lib/highlight.js'];
 
     /**
      * @var string stylesheet to use.
@@ -31,9 +25,7 @@ class HighlightLocalAsset extends AssetBundle
      */
     public $style;
 
-    /**
-     * @var array
-     */
+    /** {@inheritdoc} */
     public $css = [
         'style' => 'styles/default.css'
     ];
@@ -44,7 +36,11 @@ class HighlightLocalAsset extends AssetBundle
      */
     public function registerAssetFiles($view)
     {
-        $style = preg_replace('#(\.min)?\.css$#', '', $this->style);
+        if ($this->style === null) {
+            $style = 'default';
+        } else {
+            $style = preg_replace('#(\.min)?\.css$#', '', $this->style);
+        }
         $this->css['style'] = 'styles/' . $style . '.css';
 
         parent::registerAssetFiles($view);

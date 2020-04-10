@@ -3,6 +3,7 @@
 namespace bizley\quill\assets;
 
 use bizley\quill\Quill;
+use yii\base\InvalidConfigException;
 use yii\web\AssetBundle;
 use yii\web\View;
 
@@ -36,9 +37,14 @@ class QuillAsset extends AssetBundle
     /**
      * Register CSS and JS file based on theme and version.
      * @param View $view the view that the asset files are to be registered with.
+     * @throws InvalidConfigException
      */
     public function registerAssetFiles($view)
     {
+        if ($this->version === null) {
+            throw new InvalidConfigException('You must provide version for Quill!');
+        }
+
         switch ($this->theme) {
             case Quill::THEME_SNOW:
                 $this->css = [$this->url . $this->version . '/quill.snow.css'];
