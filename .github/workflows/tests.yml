@@ -34,6 +34,8 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install dependencies
         run: composer update $DEFAULT_COMPOSER_FLAGS
+      - name: Show folder
+        run: ls -la
       - name: PHP Unit tests for PHP 7.4
         run: vendor/bin/phpunit -c phpunit.xml -v --coverage-clover coverage.clover
         if: matrix.php == '7.4'
