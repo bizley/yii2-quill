@@ -2,7 +2,7 @@
   "name": "bizley/quill",
   "description": "Quill editor implementation for Yii 2.",
   "type": "yii2-extension",
-  "keywords": ["yii2","quill","wysiwyg","widget","editor"],
+  "keywords": ["yii2","quill","wysiwyg","widget","editor","katex","highlight.js"],
   "license": "Apache-2.0",
   "authors": [
     {
@@ -14,7 +14,7 @@
     "source": "https://github.com/bizley/yii2-quill"
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "yiisoft/yii2": "^2.0.0"
   },
   "require-dev": {
@@ -25,8 +25,9 @@
     "roave/security-advisories": "dev-master"
   },
   "suggest": {
-    "npm-asset/highlight.js": "To use syntax highlighting",
-    "npm-asset/katex": "To use formula module"
+    "npm-asset/highlight.js": "For local highlight.js assets",
+    "npm-asset/katex": "For local KaTeX assets",
+    "npm-asset/quill": "For local Quill assets"
   },
   "autoload": {
     "psr-4": {

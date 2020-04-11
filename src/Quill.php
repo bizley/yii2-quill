@@ -29,7 +29,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 2.7.0
+ * @version 3.0.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
@@ -77,7 +77,7 @@ class Quill extends InputWidget
      * ['bold' => '<i class="fa fa-bold" aria-hidden="true"></i>']
      * will overwrite default icon for "bold" button.
      * @see https://github.com/quilljs/quill/issues/1099
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public $icons = [];
 
@@ -174,7 +174,7 @@ class Quill extends InputWidget
      * See https://github.com/isagalaev/highlight.js/tree/master/src/styles
      * Used when Syntax module is added.
      * Provide just the name of stylesheet (skip ".css" or ".min.css").
-     * Since 2.7.0 this property works also for $localAssets set to true.
+     * Since 3.0.0 this property works also for $localAssets set to true.
      * @since 2.0.0
      */
     public $highlightStyle = 'default';
@@ -254,7 +254,7 @@ class Quill extends InputWidget
     /**
      * Returns Quill configuration.
      * @return array
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function getConfig()
     {
@@ -265,7 +265,7 @@ class Quill extends InputWidget
      * Adds new value to Quill configuration.
      * @param string $name
      * @param mixed $value
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function addConfig($name, $value)
     {
@@ -276,7 +276,7 @@ class Quill extends InputWidget
      * Adds new module to Quill configuration.
      * @param string $name
      * @param mixed $config
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function addModule($name, $config)
     {
@@ -298,7 +298,7 @@ class Quill extends InputWidget
     /**
      * Sets Quill configuration.
      * @param array $config
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function setConfig($config)
     {
@@ -311,7 +311,7 @@ class Quill extends InputWidget
     /**
      * Checks whether the Katex needs to be added.
      * @return bool
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function isKatex()
     {
@@ -321,11 +321,11 @@ class Quill extends InputWidget
     /**
      * Sets Katex flag.
      * @param bool $katex
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function setKatex($katex)
     {
-        $this->_katex = (bool)$katex;
+        $this->_katex = (bool) $katex;
     }
 
     /** @var bool */
@@ -334,7 +334,7 @@ class Quill extends InputWidget
     /**
      * Checks whether the Highlight.js needs to be added.
      * @return bool
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function isHighlightJs()
     {
@@ -344,11 +344,11 @@ class Quill extends InputWidget
     /**
      * Sets Highlight.js flag.
      * @param bool $highlightJs
-     * @since 2.7.0
+     * @since 3.0.0
      */
     public function setHighlightJs($highlightJs)
     {
-        $this->_highlightJs = (bool)$highlightJs;
+        $this->_highlightJs = (bool) $highlightJs;
     }
 
     /** Prepares Quill configuration */
@@ -389,7 +389,7 @@ class Quill extends InputWidget
                 $this->addConfig('formats', $this->formats);
             }
 
-            if ($this->readOnly !== null && (bool)$this->readOnly) {
+            if ($this->readOnly !== null && (bool) $this->readOnly) {
                 $this->addConfig('readOnly', true);
             }
 
