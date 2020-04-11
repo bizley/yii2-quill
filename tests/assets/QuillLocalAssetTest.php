@@ -14,7 +14,7 @@ use yii\web\Application;
 class QuillLocalAssetTest extends TestCase
 {
     /** @throws InvalidConfigException */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         new Application(
             [
@@ -33,12 +33,12 @@ class QuillLocalAssetTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
     }
 
-    public function providerForThemes()
+    public function providerForThemes(): array
     {
         return [
             'empty' => [null, 'quill.core.css'],
@@ -51,10 +51,10 @@ class QuillLocalAssetTest extends TestCase
     /**
      * @test
      * @dataProvider providerForThemes
-     * @param $theme
-     * @param $css
+     * @param string|null $theme
+     * @param string $css
      */
-    public function shouldProperlyRegisterAssetFiles($theme, $css)
+    public function shouldProperlyRegisterAssetFiles(?string $theme, string $css): void
     {
         $asset = new QuillLocalAsset();
         $asset->theme = $theme;

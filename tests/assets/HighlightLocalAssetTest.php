@@ -13,7 +13,7 @@ use yii\web\Application;
 class HighlightLocalAssetTest extends TestCase
 {
     /** @throws InvalidConfigException */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         new Application(
             [
@@ -32,12 +32,12 @@ class HighlightLocalAssetTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
     }
 
-    public function providerForStyles()
+    public function providerForStyles(): array
     {
         return [
             'empty' => [null, 'styles/default.css'],
@@ -50,10 +50,10 @@ class HighlightLocalAssetTest extends TestCase
     /**
      * @test
      * @dataProvider providerForStyles
-     * @param $style
-     * @param $css
+     * @param string|null $style
+     * @param string $css
      */
-    public function shouldProperlyRegisterAssetFiles($style, $css)
+    public function shouldProperlyRegisterAssetFiles(?string $style, string $css): void
     {
         $asset = new HighlightLocalAsset();
         $asset->style = $style;

@@ -21,7 +21,7 @@
     "npm-asset/highlight.js": "^9.18",
     "npm-asset/katex": "^0.11",
     "npm-asset/quill": "^1.3",
-    "phpunit/phpunit": "^6.5",
+    "phpunit/phpunit": "^7.5",
     "roave/security-advisories": "dev-master"
   },
   "suggest": {

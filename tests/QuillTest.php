@@ -20,13 +20,13 @@ use yii\web\View;
 
 class QuillTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         Quill::$counter = 0;
     }
 
     /** @throws InvalidConfigException */
-    public static function setApp()
+    public static function setApp(): void
     {
         new Application(
             [
@@ -46,7 +46,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnEmptyQuillVersion()
+    public function shouldThrowExceptionOnEmptyQuillVersion(): void
     {
         $this->expectExceptionMessage('The "quillVersion" property must be a non-empty string!');
         new Quill(
@@ -58,7 +58,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonStringQuillVersion()
+    public function shouldThrowExceptionOnNonStringQuillVersion(): void
     {
         $this->expectExceptionMessage('The "quillVersion" property must be a non-empty string!');
         new Quill(
@@ -70,7 +70,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonArrayConfiguration()
+    public function shouldThrowExceptionOnNonArrayConfiguration(): void
     {
         $this->expectExceptionMessage('The "configuration" property must be an array!');
         new Quill(
@@ -82,7 +82,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonStringJs()
+    public function shouldThrowExceptionOnNonStringJs(): void
     {
         $this->expectExceptionMessage('The "js" property must be a string!');
         new Quill(
@@ -94,7 +94,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonArrayFormats()
+    public function shouldThrowExceptionOnNonArrayFormats(): void
     {
         $this->expectExceptionMessage('The "formats" property must be an array!');
         new Quill(
@@ -106,7 +106,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonArrayModules()
+    public function shouldThrowExceptionOnNonArrayModules(): void
     {
         $this->expectExceptionMessage('The "modules" property must be an array!');
         new Quill(
@@ -118,7 +118,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonArrayIcons()
+    public function shouldThrowExceptionOnNonArrayIcons(): void
     {
         $this->expectExceptionMessage('The "icons" property must be an associative array!');
         new Quill(
@@ -130,7 +130,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldThrowExceptionOnNonAssociativeArrayIcons()
+    public function shouldThrowExceptionOnNonAssociativeArrayIcons(): void
     {
         $this->expectExceptionMessage('The "icons" property must be an associative array!');
         new Quill(
@@ -142,7 +142,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldPrepareDefaultOptions()
+    public function shouldPrepareDefaultOptions(): void
     {
         $quill = new Quill(['name' => 'test']);
 
@@ -182,7 +182,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldPrepareThemeThroughConfig()
+    public function shouldPrepareThemeThroughConfig(): void
     {
         $quill = new Quill(
             [
@@ -196,7 +196,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldPrepareKatexThroughConfig()
+    public function shouldPrepareKatexThroughConfig(): void
     {
         $quill = new Quill(
             [
@@ -210,7 +210,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldPrepareHighlightJsThroughConfig()
+    public function shouldPrepareHighlightJsThroughConfig(): void
     {
         $quill = new Quill(
             [
@@ -224,7 +224,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddThemeToConfig()
+    public function shouldAddThemeToConfig(): void
     {
         $quill = new Quill(
             [
@@ -243,7 +243,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddBoundsToConfig()
+    public function shouldAddBoundsToConfig(): void
     {
         $quill = new Quill(
             [
@@ -258,7 +258,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddDebugToConfig()
+    public function shouldAddDebugToConfig(): void
     {
         $quill = new Quill(
             [
@@ -278,7 +278,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddPlaceholderToConfig()
+    public function shouldAddPlaceholderToConfig(): void
     {
         $quill = new Quill(
             [
@@ -298,7 +298,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddFormatsToConfig()
+    public function shouldAddFormatsToConfig(): void
     {
         $quill = new Quill(
             [
@@ -318,7 +318,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddReadOnlyToConfig()
+    public function shouldAddReadOnlyToConfig(): void
     {
         $quill = new Quill(
             [
@@ -338,7 +338,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddKatexToConfig()
+    public function shouldAddKatexToConfig(): void
     {
         $quill = new Quill(
             [
@@ -361,7 +361,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddHighlightJsToConfig()
+    public function shouldAddHighlightJsToConfig(): void
     {
         $quill = new Quill(
             [
@@ -384,7 +384,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddModulesToConfig()
+    public function shouldAddModulesToConfig(): void
     {
         $quill = new Quill(
             [
@@ -412,7 +412,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldNotAddToolbarToConfigWhenToolbarOptionsAreEmpty()
+    public function shouldNotAddToolbarToConfigWhenToolbarOptionsAreEmpty(): void
     {
         $quill = new Quill(
             [
@@ -425,7 +425,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddBasicToolbarToConfig()
+    public function shouldAddBasicToolbarToConfig(): void
     {
         $quill = new Quill(
             [
@@ -461,7 +461,7 @@ class QuillTest extends TestCase
     }
 
     /** @test */
-    public function shouldAddFullToolbarToConfig()
+    public function shouldAddFullToolbarToConfig(): void
     {
         $quill = new Quill(
             [
@@ -533,7 +533,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterOnlyCDNQuill()
+    public function shouldRegisterOnlyCDNQuill(): void
     {
         static::setApp();
 
@@ -560,7 +560,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterOnlyLocalQuill()
+    public function shouldRegisterOnlyLocalQuill(): void
     {
         static::setApp();
 
@@ -594,7 +594,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterCDNQuillAndKatex()
+    public function shouldRegisterCDNQuillAndKatex(): void
     {
         static::setApp();
 
@@ -635,7 +635,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterLocalQuillAndKatex()
+    public function shouldRegisterLocalQuillAndKatex(): void
     {
         static::setApp();
 
@@ -677,7 +677,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterCDNQuillAndHighlightJs()
+    public function shouldRegisterCDNQuillAndHighlightJs(): void
     {
         static::setApp();
 
@@ -721,7 +721,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterLocalQuillAndHighlightJs()
+    public function shouldRegisterLocalQuillAndHighlightJs(): void
     {
         static::setApp();
 
@@ -767,7 +767,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterCDNQuillKatexAndHighlightJs()
+    public function shouldRegisterCDNQuillKatexAndHighlightJs(): void
     {
         static::setApp();
 
@@ -810,7 +810,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldRegisterLocalQuillKatexAndHighlightJs()
+    public function shouldRegisterLocalQuillKatexAndHighlightJs(): void
     {
         static::setApp();
 
@@ -854,7 +854,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldWorkWithModel()
+    public function shouldWorkWithModel(): void
     {
         static::setApp();
 
@@ -886,7 +886,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldReplacePlaceholdersInJs()
+    public function shouldReplacePlaceholdersInJs(): void
     {
         static::setApp();
 
@@ -917,7 +917,7 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldAddIcons()
+    public function shouldAddIcons(): void
     {
         static::setApp();
 

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace bizley\quill\assets;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Local Highlight.js assets.
@@ -32,9 +35,9 @@ class HighlightLocalAsset extends AssetBundle
 
     /**
      * Registers CSS and JS file based on version.
-     * @param \yii\web\View $view the view that the asset files are to be registered with.
+     * @param View $view the view that the asset files are to be registered with.
      */
-    public function registerAssetFiles($view)
+    public function registerAssetFiles($view): void
     {
         if ($this->style === null) {
             $style = 'default';

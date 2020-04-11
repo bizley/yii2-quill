@@ -14,7 +14,7 @@ use yii\web\Application;
 class QuillAssetTest extends TestCase
 {
     /** @throws InvalidConfigException */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         new Application(
             [
@@ -33,7 +33,7 @@ class QuillAssetTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
     }
@@ -42,7 +42,7 @@ class QuillAssetTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldThrowExceptionWhenNoVersionProvided()
+    public function shouldThrowExceptionWhenNoVersionProvided(): void
     {
         $this->expectExceptionMessage('You must provide version for Quill!');
 
@@ -50,7 +50,7 @@ class QuillAssetTest extends TestCase
         $asset->registerAssetFiles(Yii::$app->view);
     }
 
-    public function providerForThemes()
+    public function providerForThemes(): array
     {
         return [
             'default' => [
@@ -74,12 +74,12 @@ class QuillAssetTest extends TestCase
     /**
      * @test
      * @dataProvider providerForThemes
-     * @param $theme
-     * @param $js
-     * @param $css
+     * @param string|null $theme
+     * @param string $js
+     * @param string $css
      * @throws InvalidConfigException
      */
-    public function shouldProperlyRegisterAssetFiles($theme, $js, $css)
+    public function shouldProperlyRegisterAssetFiles(?string $theme, string $js, string $css): void
     {
         $asset = new QuillAsset();
         $asset->version = Quill::QUILL_VERSION;
