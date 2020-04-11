@@ -14,7 +14,7 @@ use yii\web\Application;
 class KatexAssetTest extends TestCase
 {
     /** @throws InvalidConfigException */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         new Application(
             [
@@ -33,7 +33,7 @@ class KatexAssetTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
     }
@@ -42,7 +42,7 @@ class KatexAssetTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldThrowExceptionWhenNoVersionProvided()
+    public function shouldThrowExceptionWhenNoVersionProvided(): void
     {
         $this->expectExceptionMessage('You must provide version for KaTeX!');
 
@@ -54,7 +54,7 @@ class KatexAssetTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldProperlyRegisterAssetFiles()
+    public function shouldProperlyRegisterAssetFiles(): void
     {
         $asset = new KatexAsset();
         $asset->version = Quill::KATEX_VERSION;

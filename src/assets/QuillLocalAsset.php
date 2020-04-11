@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace bizley\quill\assets;
 
 use bizley\quill\Quill;
@@ -33,7 +35,7 @@ class QuillLocalAsset extends AssetBundle
      * Registers CSS file based on theme.
      * @param View $view the view that the asset files are to be registered with.
      */
-    public function registerAssetFiles($view)
+    public function registerAssetFiles($view): void
     {
         switch ($this->theme) {
             case Quill::THEME_SNOW:

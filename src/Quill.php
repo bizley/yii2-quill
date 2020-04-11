@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace bizley\quill;
 
 use bizley\quill\assets\HighlightAsset;
@@ -39,15 +41,15 @@ use yii\widgets\InputWidget;
  */
 class Quill extends InputWidget
 {
-    const THEME_SNOW = 'snow';
-    const THEME_BUBBLE = 'bubble';
+    public const THEME_SNOW = 'snow';
+    public const THEME_BUBBLE = 'bubble';
 
-    const TOOLBAR_FULL = 'FULL';
-    const TOOLBAR_BASIC = 'BASIC';
+    public const TOOLBAR_FULL = 'FULL';
+    public const TOOLBAR_BASIC = 'BASIC';
 
-    const QUILL_VERSION = '1.3.7';
-    const KATEX_VERSION = '0.11.1';
-    const HIGHLIGHTJS_VERSION = '9.18.1';
+    public const QUILL_VERSION = '1.3.7';
+    public const KATEX_VERSION = '0.11.1';
+    public const HIGHLIGHTJS_VERSION = '9.18.1';
 
     /** {@inheritdoc} */
     public static $autoIdPrefix = 'quill-';
@@ -211,7 +213,7 @@ class Quill extends InputWidget
      * {@inheritdoc}
      * @throws InvalidConfigException
      */
-    public function init()
+    public function init(): void
     {
         if (empty($this->quillVersion) || !is_string($this->quillVersion)) {
             throw new InvalidConfigException('The "quillVersion" property must be a non-empty string!');
@@ -256,7 +258,7 @@ class Quill extends InputWidget
      * @return array
      * @since 3.0.0
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->_quillConfiguration;
     }
@@ -267,7 +269,7 @@ class Quill extends InputWidget
      * @param mixed $value
      * @since 3.0.0
      */
-    public function addConfig($name, $value)
+    public function addConfig(string $name, $value): void
     {
         $this->_quillConfiguration[$name] = $value;
     }
@@ -278,7 +280,7 @@ class Quill extends InputWidget
      * @param mixed $config
      * @since 3.0.0
      */
-    public function addModule($name, $config)
+    public function addModule(string $name, $config): void
     {
         if (!array_key_exists('modules', $this->_quillConfiguration)) {
             $this->_quillConfiguration['modules'] = [];
@@ -300,7 +302,7 @@ class Quill extends InputWidget
      * @param array $config
      * @since 3.0.0
      */
-    public function setConfig($config)
+    public function setConfig(array $config): void
     {
         $this->_quillConfiguration = $config;
     }
@@ -313,7 +315,7 @@ class Quill extends InputWidget
      * @return bool
      * @since 3.0.0
      */
-    public function isKatex()
+    public function isKatex(): bool
     {
         return $this->_katex;
     }
@@ -323,9 +325,9 @@ class Quill extends InputWidget
      * @param bool $katex
      * @since 3.0.0
      */
-    public function setKatex($katex)
+    public function setKatex(bool $katex): void
     {
-        $this->_katex = (bool) $katex;
+        $this->_katex = $katex;
     }
 
     /** @var bool */
@@ -336,7 +338,7 @@ class Quill extends InputWidget
      * @return bool
      * @since 3.0.0
      */
-    public function isHighlightJs()
+    public function isHighlightJs(): bool
     {
         return $this->_highlightJs;
     }
@@ -346,13 +348,13 @@ class Quill extends InputWidget
      * @param bool $highlightJs
      * @since 3.0.0
      */
-    public function setHighlightJs($highlightJs)
+    public function setHighlightJs(bool $highlightJs): void
     {
-        $this->_highlightJs = (bool) $highlightJs;
+        $this->_highlightJs = $highlightJs;
     }
 
     /** Prepares Quill configuration */
-    protected function prepareOptions()
+    protected function prepareOptions(): void
     {
         if (!empty($this->configuration)) {
             if (isset($this->configuration['theme'])) {
@@ -407,7 +409,7 @@ class Quill extends InputWidget
 
     /**
      * Prepares predefined set of buttons.
-     * @return bool|array
+     * @return bool|array|string
      */
     public function renderToolbar()
     {
@@ -490,7 +492,7 @@ class Quill extends InputWidget
     }
 
     /** {@inheritdoc} */
-    public function run()
+    public function run(): string
     {
         $this->registerClientScript();
 
@@ -509,7 +511,7 @@ class Quill extends InputWidget
      * Registers widget assets.
      * Note that Quill works without jQuery.
      */
-    public function registerClientScript()
+    public function registerClientScript(): void
     {
         $view = $this->view;
 
@@ -554,7 +556,8 @@ class Quill extends InputWidget
             }
         }
         $js .= "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
-        $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
+        $js .= "$editor.on('text-change',function()";
+        $js .= "{document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
 
         if (!empty($this->js)) {
             $js .= str_replace('{quill}', $editor, $this->js);

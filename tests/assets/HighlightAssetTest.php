@@ -14,7 +14,7 @@ use yii\web\Application;
 class HighlightAssetTest extends TestCase
 {
     /** @throws InvalidConfigException */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         new Application(
             [
@@ -33,7 +33,7 @@ class HighlightAssetTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
     }
@@ -42,7 +42,7 @@ class HighlightAssetTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
-    public function shouldThrowExceptionWhenNoVersionProvided()
+    public function shouldThrowExceptionWhenNoVersionProvided(): void
     {
         $this->expectExceptionMessage('You must provide version for Highlight.js!');
 
@@ -50,7 +50,7 @@ class HighlightAssetTest extends TestCase
         $asset->registerAssetFiles(Yii::$app->view);
     }
 
-    public function providerForStyles()
+    public function providerForStyles(): array
     {
         return [
             'empty' => [
@@ -86,12 +86,12 @@ class HighlightAssetTest extends TestCase
     /**
      * @test
      * @dataProvider providerForStyles
-     * @param $style
-     * @param $js
-     * @param $css
+     * @param string|null $style
+     * @param string $js
+     * @param string $css
      * @throws InvalidConfigException
      */
-    public function shouldProperlyRegisterAssetFiles($style, $js, $css)
+    public function shouldProperlyRegisterAssetFiles(?string $style, string $js, string $css): void
     {
         $asset = new HighlightAsset();
         $asset->version = Quill::HIGHLIGHTJS_VERSION;

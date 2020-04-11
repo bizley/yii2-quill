@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace bizley\quill\assets;
 
 use yii\base\InvalidConfigException;
@@ -38,7 +40,7 @@ class HighlightAsset extends AssetBundle
      * @param View $view the view that the asset files are to be registered with.
      * @throws InvalidConfigException
      */
-    public function registerAssetFiles($view)
+    public function registerAssetFiles($view): void
     {
         if ($this->version === null) {
             throw new InvalidConfigException('You must provide version for Highlight.js!');
