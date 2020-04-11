@@ -14,7 +14,7 @@
     "source": "https://github.com/bizley/yii2-quill"
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "yiisoft/yii2": "^2.0.0"
   },
   "require-dev": {

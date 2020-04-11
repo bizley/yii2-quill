@@ -3,9 +3,6 @@
 ![Latest Stable Version](https://img.shields.io/packagist/v/bizley/quill.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/bizley/quill.svg)](https://packagist.org/packages/bizley/quill)
 ![License](https://img.shields.io/packagist/l/bizley/quill.svg)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/bizley/yii2-quill/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bizley/yii2-quill/build-status/master)
 
 *Yii 2 implementation of Quill, modern WYSIWYG editor.*
 
@@ -24,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^2.7
+composer require bizley/quill:^3.0
 ```
 
 Or add the package to your `composer.json`:
@@ -32,7 +29,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^2.7"
+        "bizley/quill": "^3.0"
     }
 }
 ```
@@ -109,7 +106,7 @@ lines are added.
 
 By default Quill is provided through the CDN (https://cdn.quilljs.com). You can change the Quill's version set with the 
 current yii2-quill's release by changing `'quillVersion'` parameter but some options may not work correctly in this case. 
-Starting from version 2.7.0 you can use local assets for Quill provided through NPM packet manager - to do 
+Starting from version 3.0.0 you can use local assets for Quill provided through NPM packet manager - to do 
 so run
 
 ```
@@ -163,7 +160,7 @@ To add this option configure widget with [Formula module](https://quilljs.com/do
 ```
 
 By default KaTeX is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of KaTeX by setting 
-the `'katexVersion'` parameter. Starting from version 2.7.0 you can use local assets for KaTeX provided through NPM 
+the `'katexVersion'` parameter. Starting from version 3.0.0 you can use local assets for KaTeX provided through NPM 
 packet manager - to do so run
 
 ```
@@ -197,7 +194,7 @@ To add this option configure widget with [Syntax Highlighter module](https://qui
 ```
 
 By default highlight.js is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of 
-highlight.js by setting the `'highlightVersion'` parameter. Starting from version 2.7.0 you can use local assets for 
+highlight.js by setting the `'highlightVersion'` parameter. Starting from version 3.0.0 you can use local assets for 
 highlight.js provided through NPM packet manager - to do so run
 
 ```
