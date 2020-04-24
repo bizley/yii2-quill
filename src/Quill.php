@@ -10,6 +10,7 @@ use bizley\quill\assets\KatexAsset;
 use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
 use bizley\quill\assets\QuillLocalAsset;
+use bizley\quill\assets\SmartBreakLocalAsset;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -156,6 +157,13 @@ class Quill extends InputWidget
     public $configuration;
 
     /**
+     * @var boolean Set true to enable smart line breaks in quill (SHIFT + Enter new lines).
+     * The `npm-asset/quill-smart-break` package is needed to make this work.
+     * @since 3.1.0
+     */
+    public $smartBreak = false;
+
+    /**
      * @var string KaTeX version to fetch from https://cdn.jsdelivr.net
      * Used when Formula module is added.
      * This property is skipped if $localAssets is set to true (KaTeX version is as set by composer then).
@@ -295,6 +303,10 @@ class Quill extends InputWidget
         if ($name === 'syntax') {
             $this->setHighlightJs(true);
         }
+
+        if ($name === 'smart-breaker') {
+            $this->setSmartBreak(true);
+        }
     }
 
     /**
@@ -305,6 +317,29 @@ class Quill extends InputWidget
     public function setConfig(array $config): void
     {
         $this->_quillConfiguration = $config;
+    }
+
+    /** @var bool */
+    private $_smartBreak = false;
+
+    /**
+     * Checks whether the Smart break needs to be added.
+     * @return bool
+     * @since 3.1.0
+     */
+    public function isSmartBreak(): bool
+    {
+        return $this->_smartBreak;
+    }
+
+    /**
+     * Sets Smart break flag.
+     * @param bool $smartBreak
+     * @since 3.1.0
+     */
+    public function setSmartBreak(bool $smartBreak): void
+    {
+        $this->_smartBreak = $smartBreak;
     }
 
     /** @var bool */
@@ -391,8 +426,12 @@ class Quill extends InputWidget
                 $this->addConfig('formats', $this->formats);
             }
 
-            if ($this->readOnly !== null && (bool) $this->readOnly) {
+            if ($this->readOnly !== null && (bool)$this->readOnly) {
                 $this->addConfig('readOnly', true);
+            }
+
+            if ($this->smartBreak !== null && (bool)$this->smartBreak) {
+                $this->modules['smart-breaker'] = true;
             }
 
             if (!empty($this->modules)) {
@@ -533,6 +572,10 @@ class Quill extends InputWidget
                 $highlightAsset->version = $this->highlightVersion;
                 $highlightAsset->style = $this->highlightStyle;
             }
+        }
+
+        if ($this->isSmartBreak() && $this->localAssets) {
+            SmartBreakLocalAsset::register($view);
         }
 
         if ($this->localAssets) {
