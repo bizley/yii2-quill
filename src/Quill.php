@@ -574,10 +574,6 @@ class Quill extends InputWidget
             }
         }
 
-        if ($this->isSmartBreak() && $this->localAssets) {
-            SmartBreakLocalAsset::register($view);
-        }
-
         if ($this->localAssets) {
             $asset = QuillLocalAsset::register($view);
         } else {
@@ -585,6 +581,10 @@ class Quill extends InputWidget
             $asset->version = $this->quillVersion;
         }
         $asset->theme = $this->theme;
+
+        if ($this->isSmartBreak() && $this->localAssets) {
+            SmartBreakLocalAsset::register($view);
+        }
 
         $configs = Json::encode($this->getConfig());
         $editor = 'q_' . Inflector::slug($this->id, '_');
