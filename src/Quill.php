@@ -557,7 +557,7 @@ class Quill extends InputWidget
                 $highlightAsset->style = $this->highlightStyle;
             }
 
-            QuillLocalAsset::register($view);
+            $asset = QuillLocalAsset::register($view);
 
             if ($this->isSmartBreak()) {
                 SmartBreakLocalAsset::register($view);
@@ -577,6 +577,7 @@ class Quill extends InputWidget
             $asset = QuillAsset::register($view);
             $asset->version = $this->quillVersion;
         }
+        $asset->theme = $this->theme;
 
         $configs = Json::encode($this->getConfig());
         $editor = 'q_' . Inflector::slug($this->id, '_');
