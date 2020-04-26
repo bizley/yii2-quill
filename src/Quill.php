@@ -157,13 +157,6 @@ class Quill extends InputWidget
     public $configuration;
 
     /**
-     * @var boolean Set true to enable smart line breaks in quill (SHIFT + Enter new lines).
-     * The `npm-asset/quill-smart-break` package is needed to make this work.
-     * @since 3.1.0
-     */
-    public $smartBreak = false;
-
-    /**
      * @var string KaTeX version to fetch from https://cdn.jsdelivr.net
      * Used when Formula module is added.
      * This property is skipped if $localAssets is set to true (KaTeX version is as set by composer then).
@@ -404,6 +397,10 @@ class Quill extends InputWidget
                 $this->setHighlightJs(true);
             }
 
+            if (isset($this->configuration['modules']['smart-breaker'])) {
+                $this->setSmartBreak(true);
+            }
+
             $this->setConfig($this->configuration);
         } else {
             if (!empty($this->theme)) {
@@ -428,10 +425,6 @@ class Quill extends InputWidget
 
             if ($this->readOnly !== null && (bool)$this->readOnly) {
                 $this->addConfig('readOnly', true);
-            }
-
-            if ($this->smartBreak !== null && (bool)$this->smartBreak) {
-                $this->modules['smart-breaker'] = true;
             }
 
             if (!empty($this->modules)) {
@@ -554,36 +547,35 @@ class Quill extends InputWidget
     {
         $view = $this->view;
 
-        if ($this->isKatex()) {
-            if ($this->localAssets) {
+        if ($this->localAssets) {
+            if ($this->isKatex()) {
                 KatexLocalAsset::register($view);
-            } else {
+            }
+
+            if ($this->isHighlightJs()) {
+                $highlightAsset = HighlightLocalAsset::register($view);
+                $highlightAsset->style = $this->highlightStyle;
+            }
+
+            QuillLocalAsset::register($view);
+
+            if ($this->isSmartBreak()) {
+                SmartBreakLocalAsset::register($view);
+            }
+        } else {
+            if ($this->isKatex()) {
                 $katexAsset = KatexAsset::register($view);
                 $katexAsset->version = $this->katexVersion;
             }
-        }
 
-        if ($this->isHighlightJs()) {
-            if ($this->localAssets) {
-                $highlightAsset = HighlightLocalAsset::register($view);
-                $highlightAsset->style = $this->highlightStyle;
-            } else {
+            if ($this->isHighlightJs()) {
                 $highlightAsset = HighlightAsset::register($view);
                 $highlightAsset->version = $this->highlightVersion;
                 $highlightAsset->style = $this->highlightStyle;
             }
-        }
 
-        if ($this->localAssets) {
-            $asset = QuillLocalAsset::register($view);
-        } else {
             $asset = QuillAsset::register($view);
             $asset->version = $this->quillVersion;
-        }
-        $asset->theme = $this->theme;
-
-        if ($this->isSmartBreak() && $this->localAssets) {
-            SmartBreakLocalAsset::register($view);
         }
 
         $configs = Json::encode($this->getConfig());
