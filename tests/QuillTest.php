@@ -10,6 +10,7 @@ use bizley\quill\assets\KatexAsset;
 use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
 use bizley\quill\assets\QuillLocalAsset;
+use bizley\quill\assets\SmartBreakLocalAsset;
 use bizley\quill\Quill;
 use PHPUnit\Framework\TestCase;
 use Yii;
@@ -677,6 +678,46 @@ class QuillTest extends TestCase
      * @test
      * @throws InvalidConfigException
      */
+    public function shouldRegisterLocalQuillAndSmartBreak()
+    {
+        static::setApp();
+
+        $this->assertSame(
+            '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
+            (
+            new Quill(
+                [
+                    'name' => 'test',
+                    'localAssets' => true,
+                    'modules' => ['smart-breaker' => true]
+                ]
+            )
+            )->run()
+        );
+        $this->assertSame(
+            [
+                QuillLocalAsset::class,
+                SmartBreakLocalAsset::class
+            ],
+            array_keys(Yii::$app->view->assetBundles)
+        );
+        $this->assertSame(['smart-breaker.min.js'], Yii::$app->view->assetBundles[SmartBreakLocalAsset::class]->js);
+        $this->assertSame(
+            [
+                'var q_quill_0=new Quill("#editor-quill-0",'
+                . '{"theme":"snow","modules":{"smart-breaker":true,"toolbar":true}});'
+                . 'q_quill_0.on(\'text-change\',function(){'
+                . 'document.getElementById("quill-0").value=q_quill_0.root.innerHTML;});'
+            ],
+            array_values(Yii::$app->view->js[View::POS_END])
+        );
+        Yii::$app = null;
+    }
+
+    /**
+     * @test
+     * @throws InvalidConfigException
+     */
     public function shouldRegisterCDNQuillAndHighlightJs(): void
     {
         static::setApp();
@@ -842,6 +883,52 @@ class QuillTest extends TestCase
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"formula":true,"toolbar":[["code-block","formula"]]}});'
+                . 'q_quill_0.on(\'text-change\',function(){'
+                . 'document.getElementById("quill-0").value=q_quill_0.root.innerHTML;});'
+            ],
+            array_values(Yii::$app->view->js[View::POS_END])
+        );
+        Yii::$app = null;
+    }
+
+    /**
+     * @test
+     * @throws InvalidConfigException
+     */
+    public function shouldRegisterLocalQuillKatexAndHighlightJsAndSmartBreak(): void
+    {
+        static::setApp();
+
+        $this->assertSame(
+            '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
+            (
+            new Quill(
+                [
+                    'name' => 'test',
+                    'localAssets' => true,
+                    'modules' => [
+                        'syntax' => true,
+                        'formula' => true,
+                        'smart-breaker' => true
+                    ],
+                    'toolbarOptions' => [['code-block', 'formula']],
+                ]
+            )
+            )->run()
+        );
+        $this->assertSame(
+            [
+                KatexLocalAsset::class,
+                HighlightLocalAsset::class,
+                QuillLocalAsset::class,
+                SmartBreakLocalAsset::class
+            ],
+            array_keys(Yii::$app->view->assetBundles)
+        );
+        $this->assertSame(
+            [
+                'var q_quill_0=new Quill("#editor-quill-0",'
+                . '{"theme":"snow","modules":{"syntax":true,"formula":true,"smart-breaker":true,"toolbar":[["code-block","formula"]]}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
                 . 'document.getElementById("quill-0").value=q_quill_0.root.innerHTML;});'
             ],

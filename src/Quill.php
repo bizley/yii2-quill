@@ -10,6 +10,7 @@ use bizley\quill\assets\KatexAsset;
 use bizley\quill\assets\KatexLocalAsset;
 use bizley\quill\assets\QuillAsset;
 use bizley\quill\assets\QuillLocalAsset;
+use bizley\quill\assets\SmartBreakLocalAsset;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -295,6 +296,10 @@ class Quill extends InputWidget
         if ($name === 'syntax') {
             $this->setHighlightJs(true);
         }
+
+        if ($name === 'smart-breaker') {
+            $this->setSmartBreak(true);
+        }
     }
 
     /**
@@ -305,6 +310,29 @@ class Quill extends InputWidget
     public function setConfig(array $config): void
     {
         $this->_quillConfiguration = $config;
+    }
+
+    /** @var bool */
+    private $_smartBreak = false;
+
+    /**
+     * Checks whether the Smart break needs to be added.
+     * @return bool
+     * @since 3.1.0
+     */
+    public function isSmartBreak(): bool
+    {
+        return $this->_smartBreak;
+    }
+
+    /**
+     * Sets Smart break flag.
+     * @param bool $smartBreak
+     * @since 3.1.0
+     */
+    public function setSmartBreak(bool $smartBreak): void
+    {
+        $this->_smartBreak = $smartBreak;
     }
 
     /** @var bool */
@@ -369,6 +397,10 @@ class Quill extends InputWidget
                 $this->setHighlightJs(true);
             }
 
+            if (isset($this->configuration['modules']['smart-breaker'])) {
+                $this->setSmartBreak(true);
+            }
+
             $this->setConfig($this->configuration);
         } else {
             if (!empty($this->theme)) {
@@ -391,7 +423,7 @@ class Quill extends InputWidget
                 $this->addConfig('formats', $this->formats);
             }
 
-            if ($this->readOnly !== null && (bool) $this->readOnly) {
+            if ($this->readOnly !== null && (bool)$this->readOnly) {
                 $this->addConfig('readOnly', true);
             }
 
@@ -515,29 +547,33 @@ class Quill extends InputWidget
     {
         $view = $this->view;
 
-        if ($this->isKatex()) {
-            if ($this->localAssets) {
+        if ($this->localAssets) {
+            if ($this->isKatex()) {
                 KatexLocalAsset::register($view);
-            } else {
+            }
+
+            if ($this->isHighlightJs()) {
+                $highlightAsset = HighlightLocalAsset::register($view);
+                $highlightAsset->style = $this->highlightStyle;
+            }
+
+            $asset = QuillLocalAsset::register($view);
+
+            if ($this->isSmartBreak()) {
+                SmartBreakLocalAsset::register($view);
+            }
+        } else {
+            if ($this->isKatex()) {
                 $katexAsset = KatexAsset::register($view);
                 $katexAsset->version = $this->katexVersion;
             }
-        }
 
-        if ($this->isHighlightJs()) {
-            if ($this->localAssets) {
-                $highlightAsset = HighlightLocalAsset::register($view);
-                $highlightAsset->style = $this->highlightStyle;
-            } else {
+            if ($this->isHighlightJs()) {
                 $highlightAsset = HighlightAsset::register($view);
                 $highlightAsset->version = $this->highlightVersion;
                 $highlightAsset->style = $this->highlightStyle;
             }
-        }
 
-        if ($this->localAssets) {
-            $asset = QuillLocalAsset::register($view);
-        } else {
             $asset = QuillAsset::register($view);
             $asset->version = $this->quillVersion;
         }
