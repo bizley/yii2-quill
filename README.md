@@ -21,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^3.0
+composer require bizley/quill:^3.1
 ```
 
 Or add the package to your `composer.json`:
@@ -29,12 +29,17 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^3.0"
+        "bizley/quill": "^3.1"
     }
 }
 ```
 
 and run `composer update`.
+
+### NPM Assets
+
+This package might depend on some NPM packages. Make sure you can fetch them by configuring your 
+`composer.json` properly (i.e. by using https://asset-packagist.org/ - see instructions there).
 
 ### Usage
 
@@ -104,7 +109,7 @@ lines are added.
 
 ### Quill source
 
-By default Quill is provided through the CDN (https://cdn.quilljs.com). You can change the Quill's version set with the 
+By default, Quill is provided through the CDN (https://cdn.quilljs.com). You can change the Quill's version set with the 
 current yii2-quill's release by changing `'quillVersion'` parameter but some options may not work correctly in this case. 
 Starting from version 3.0.0 you can use local assets for Quill provided through NPM packet manager - to do 
 so run
@@ -159,7 +164,7 @@ To add this option configure widget with [Formula module](https://quilljs.com/do
 ]
 ```
 
-By default KaTeX is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of KaTeX by setting 
+By default, KaTeX is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of KaTeX by setting 
 the `'katexVersion'` parameter. Starting from version 3.0.0 you can use local assets for KaTeX provided through NPM 
 packet manager - to do so run
 
@@ -193,7 +198,7 @@ To add this option configure widget with [Syntax Highlighter module](https://qui
 ]
 ```
 
-By default highlight.js is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of 
+By default, highlight.js is provided through the CDN (https://cdn.jsdelivr.net). You can change the version of 
 highlight.js by setting the `'highlightVersion'` parameter. Starting from version 3.0.0 you can use local assets for 
 highlight.js provided through NPM packet manager - to do so run
 
@@ -215,3 +220,36 @@ You also need to set `['localAssets' => true]` in Quill's configuration.
 
 You can change the default highlight.js stylesheet (for both CDN and local version) by setting the `'highlightStyle'` 
 parameter. See [the list of possible styles](https://github.com/isagalaev/highlight.js/tree/master/src/styles).
+
+### Smart Break module
+
+You can add Smart Break (support for shift + enter) by using the 
+[quill-smart-break](https://github.com/simialbi/quill-smart-break/) plugin:
+
+```php
+[
+    'modules' => [
+        'smart-breaker' => true,
+    ],
+]
+```
+
+Starting from version 3.1.0 quill-smart-break is provided through NPM packet manager by local asset. For 
+previous versions you would have to add it through custom JS (see `js` property).  
+Run
+
+```
+composer require npm-asset/quill-smart-break:^0.1
+```
+
+Or add the package to your `composer.json`:
+
+```json
+{
+    "require": {
+        "npm-asset/quill-smart-break": ">=0.1.1 <1.0.0"
+    }
+}
+```
+
+You also need to set `['localAssets' => true]` in Quill's configuration.

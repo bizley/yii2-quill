@@ -32,7 +32,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 3.0.0
+ * @version 3.1.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
