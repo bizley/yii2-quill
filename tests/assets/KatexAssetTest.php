@@ -60,11 +60,11 @@ class KatexAssetTest extends TestCase
         $asset->version = Quill::KATEX_VERSION;
         $asset->registerAssetFiles(Yii::$app->view);
 
-        $this->assertSame(
+        self::assertSame(
             ['https://cdn.jsdelivr.net/npm/katex@' . Quill::KATEX_VERSION . '/dist/katex.min.js'],
             $asset->js
         );
-        $this->assertSame(
+        self::assertSame(
             ['https://cdn.jsdelivr.net/npm/katex@' . Quill::KATEX_VERSION . '/dist/katex.min.css'],
             $asset->css
         );

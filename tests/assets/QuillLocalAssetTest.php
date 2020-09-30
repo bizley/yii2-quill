@@ -60,6 +60,6 @@ class QuillLocalAssetTest extends TestCase
         $asset->theme = $theme;
         $asset->registerAssetFiles(Yii::$app->view);
 
-        $this->assertSame(['theme' => $css], $asset->css);
+        self::assertSame(['theme' => $css], $asset->css);
     }
 }
