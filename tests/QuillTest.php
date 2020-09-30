@@ -18,6 +18,7 @@ use yii\base\DynamicModel;
 use yii\base\InvalidConfigException;
 use yii\web\Application;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 
 class QuillTest extends TestCase
 {
@@ -147,39 +148,54 @@ class QuillTest extends TestCase
     {
         $quill = new Quill(['name' => 'test']);
 
-        $this->assertSame(Quill::THEME_SNOW, $quill->theme);
-        $this->assertTrue($quill->toolbarOptions);
-        $this->assertNull($quill->placeholder);
-        $this->assertNull($quill->bounds);
-        $this->assertNull($quill->debug);
-        $this->assertNull($quill->formats);
-        $this->assertNull($quill->modules);
-        $this->assertNull($quill->readOnly);
-        $this->assertNull($quill->js);
-        $this->assertSame(Quill::QUILL_VERSION, $quill->quillVersion);
-        $this->assertNull($quill->configuration);
-        $this->assertSame(Quill::KATEX_VERSION, $quill->katexVersion);
-        $this->assertSame(Quill::HIGHLIGHTJS_VERSION, $quill->highlightVersion);
-        $this->assertSame('default', $quill->highlightStyle);
-        $this->assertSame(
+        self::assertSame(Quill::THEME_SNOW, $quill->theme);
+        self::assertTrue($quill->toolbarOptions);
+        self::assertNull($quill->placeholder);
+        self::assertNull($quill->bounds);
+        self::assertNull($quill->debug);
+        self::assertNull($quill->formats);
+        self::assertNull($quill->modules);
+        self::assertNull($quill->readOnly);
+        self::assertNull($quill->js);
+        self::assertSame(Quill::QUILL_VERSION, $quill->quillVersion);
+        self::assertNull($quill->configuration);
+        self::assertSame(Quill::KATEX_VERSION, $quill->katexVersion);
+        self::assertSame(Quill::HIGHLIGHTJS_VERSION, $quill->highlightVersion);
+        self::assertSame('default', $quill->highlightStyle);
+        self::assertSame(
             [
+                'id' => 'editor-quill-0',
                 'style' => 'min-height:150px;',
-                'id' => 'editor-quill-0'
             ],
             $quill->options
         );
-        $this->assertSame([], $quill->hiddenOptions);
-        $this->assertSame('div', $quill->tag);
-        $this->assertFalse($quill->localAssets);
-        $this->assertFalse($quill->isKatex());
-        $this->assertFalse($quill->isHighlightJs());
-        $this->assertSame(
+        self::assertSame([], $quill->hiddenOptions);
+        self::assertSame('div', $quill->tag);
+        self::assertFalse($quill->localAssets);
+        self::assertFalse($quill->isKatex());
+        self::assertFalse($quill->isHighlightJs());
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => ['toolbar' => true]
             ],
             $quill->getConfig()
         );
+        self::assertFalse($quill->allowResize);
+    }
+
+    /** @test */
+    public function shouldNotSetDefaultMinHeightWithAllowResize(): void
+    {
+        $quill = new Quill(
+            [
+                'name' => 'test',
+                'allowResize' => true,
+            ]
+        );
+
+        self::assertSame(['id' => 'editor-quill-0'], $quill->options);
+        self::assertTrue($quill->allowResize);
     }
 
     /** @test */
@@ -192,8 +208,8 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame('test', $quill->theme);
-        $this->assertSame(['theme' => 'test'], $quill->getConfig());
+        self::assertSame('test', $quill->theme);
+        self::assertSame(['theme' => 'test'], $quill->getConfig());
     }
 
     /** @test */
@@ -206,8 +222,8 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertTrue($quill->isKatex());
-        $this->assertSame(['modules' => ['formula' => true]], $quill->getConfig());
+        self::assertTrue($quill->isKatex());
+        self::assertSame(['modules' => ['formula' => true]], $quill->getConfig());
     }
 
     /** @test */
@@ -220,8 +236,8 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertTrue($quill->isHighlightJs());
-        $this->assertSame(['modules' => ['syntax' => true]], $quill->getConfig());
+        self::assertTrue($quill->isHighlightJs());
+        self::assertSame(['modules' => ['syntax' => true]], $quill->getConfig());
     }
 
     /** @test */
@@ -234,7 +250,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => 'test',
                 'modules' => ['toolbar' => true]
@@ -253,9 +269,9 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(Quill::THEME_SNOW, $quill->getConfig()['theme']);
-        $this->assertSame(['toolbar' => true], $quill->getConfig()['modules']);
-        $this->assertSame('test', $quill->getConfig()['bounds']->expression);
+        self::assertSame(Quill::THEME_SNOW, $quill->getConfig()['theme']);
+        self::assertSame(['toolbar' => true], $quill->getConfig()['modules']);
+        self::assertSame('test', $quill->getConfig()['bounds']->expression);
     }
 
     /** @test */
@@ -268,7 +284,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'debug' => 'error',
@@ -288,7 +304,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'placeholder' => 'p',
@@ -308,7 +324,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'formats' => ['p'],
@@ -328,7 +344,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'readOnly' => true,
@@ -348,7 +364,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => [
@@ -358,7 +374,7 @@ class QuillTest extends TestCase
             ],
             $quill->getConfig()
         );
-        $this->assertTrue($quill->isKatex());
+        self::assertTrue($quill->isKatex());
     }
 
     /** @test */
@@ -371,7 +387,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => [
@@ -381,7 +397,7 @@ class QuillTest extends TestCase
             ],
             $quill->getConfig()
         );
-        $this->assertTrue($quill->isHighlightJs());
+        self::assertTrue($quill->isHighlightJs());
     }
 
     /** @test */
@@ -397,7 +413,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => [
@@ -408,8 +424,8 @@ class QuillTest extends TestCase
             ],
             $quill->getConfig()
         );
-        $this->assertFalse($quill->isKatex());
-        $this->assertFalse($quill->isHighlightJs());
+        self::assertFalse($quill->isKatex());
+        self::assertFalse($quill->isHighlightJs());
     }
 
     /** @test */
@@ -422,7 +438,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(['theme' => Quill::THEME_SNOW], $quill->getConfig());
+        self::assertSame(['theme' => Quill::THEME_SNOW], $quill->getConfig());
     }
 
     /** @test */
@@ -435,7 +451,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => [
@@ -471,7 +487,7 @@ class QuillTest extends TestCase
             ]
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'theme' => Quill::THEME_SNOW,
                 'modules' => [
@@ -538,15 +554,15 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (new Quill(['name' => 'test']))->run()
         );
-        $this->assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
-        $this->assertSame(Quill::QUILL_VERSION, Yii::$app->view->assetBundles[QuillAsset::class]->version);
-        $this->assertSame(Quill::THEME_SNOW, Yii::$app->view->assetBundles[QuillAsset::class]->theme);
-        $this->assertSame('https://cdn.quilljs.com/', Yii::$app->view->assetBundles[QuillAsset::class]->url);
-        $this->assertSame(
+        self::assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
+        self::assertSame(Quill::QUILL_VERSION, Yii::$app->view->assetBundles[QuillAsset::class]->version);
+        self::assertSame(Quill::THEME_SNOW, Yii::$app->view->assetBundles[QuillAsset::class]->theme);
+        self::assertSame('https://cdn.quilljs.com/', Yii::$app->view->assetBundles[QuillAsset::class]->url);
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
@@ -565,7 +581,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
                 new Quill(
@@ -576,11 +592,11 @@ class QuillTest extends TestCase
                 )
             )->run()
         );
-        $this->assertSame([QuillLocalAsset::class], array_keys(Yii::$app->view->assetBundles));
-        $this->assertSame(['quill.min.js'], Yii::$app->view->assetBundles[QuillLocalAsset::class]->js);
-        $this->assertSame(['theme' => 'quill.core.css'], Yii::$app->view->assetBundles[QuillLocalAsset::class]->css);
-        $this->assertSame(Quill::THEME_SNOW, Yii::$app->view->assetBundles[QuillLocalAsset::class]->theme);
-        $this->assertSame(
+        self::assertSame([QuillLocalAsset::class], array_keys(Yii::$app->view->assetBundles));
+        self::assertSame(['quill.min.js'], Yii::$app->view->assetBundles[QuillLocalAsset::class]->js);
+        self::assertSame(['theme' => 'quill.core.css'], Yii::$app->view->assetBundles[QuillLocalAsset::class]->css);
+        self::assertSame(Quill::THEME_SNOW, Yii::$app->view->assetBundles[QuillLocalAsset::class]->theme);
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
@@ -599,7 +615,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
                 new Quill(
@@ -611,16 +627,16 @@ class QuillTest extends TestCase
                 )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 KatexAsset::class,
                 QuillAsset::class
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(Quill::KATEX_VERSION, Yii::$app->view->assetBundles[KatexAsset::class]->version);
-        $this->assertSame('https://cdn.jsdelivr.net/npm/katex@', Yii::$app->view->assetBundles[KatexAsset::class]->url);
-        $this->assertSame(
+        self::assertSame(Quill::KATEX_VERSION, Yii::$app->view->assetBundles[KatexAsset::class]->version);
+        self::assertSame('https://cdn.jsdelivr.net/npm/katex@', Yii::$app->view->assetBundles[KatexAsset::class]->url);
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"formula":true,"toolbar":[["formula"]]}});'
@@ -640,7 +656,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -653,16 +669,16 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 KatexLocalAsset::class,
                 QuillLocalAsset::class
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(['katex.min.js'], Yii::$app->view->assetBundles[KatexLocalAsset::class]->js);
-        $this->assertSame(['katex.min.css'], Yii::$app->view->assetBundles[KatexLocalAsset::class]->css);
-        $this->assertSame(
+        self::assertSame(['katex.min.js'], Yii::$app->view->assetBundles[KatexLocalAsset::class]->js);
+        self::assertSame(['katex.min.css'], Yii::$app->view->assetBundles[KatexLocalAsset::class]->css);
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"formula":true,"toolbar":[["formula"]]}});'
@@ -682,7 +698,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -694,15 +710,15 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 QuillLocalAsset::class,
                 SmartBreakLocalAsset::class
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(['smart-breaker.min.js'], Yii::$app->view->assetBundles[SmartBreakLocalAsset::class]->js);
-        $this->assertSame(
+        self::assertSame(['smart-breaker.min.js'], Yii::$app->view->assetBundles[SmartBreakLocalAsset::class]->js);
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"smart-breaker":true,"toolbar":true}});'
@@ -722,7 +738,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -734,19 +750,19 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 HighlightAsset::class,
                 QuillAsset::class
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(Quill::HIGHLIGHTJS_VERSION, Yii::$app->view->assetBundles[HighlightAsset::class]->version);
-        $this->assertSame(
+        self::assertSame(Quill::HIGHLIGHTJS_VERSION, Yii::$app->view->assetBundles[HighlightAsset::class]->version);
+        self::assertSame(
             'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@',
             Yii::$app->view->assetBundles[HighlightAsset::class]->url
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"toolbar":[["code-block"]]}});'
@@ -766,7 +782,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -779,20 +795,20 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 HighlightLocalAsset::class,
                 QuillLocalAsset::class
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(['lib/highlight.js'], Yii::$app->view->assetBundles[HighlightLocalAsset::class]->js);
-        $this->assertSame('default', Yii::$app->view->assetBundles[HighlightLocalAsset::class]->style);
-        $this->assertSame(
+        self::assertSame(['lib/highlight.js'], Yii::$app->view->assetBundles[HighlightLocalAsset::class]->js);
+        self::assertSame('default', Yii::$app->view->assetBundles[HighlightLocalAsset::class]->style);
+        self::assertSame(
             ['style' => 'styles/default.css'],
             Yii::$app->view->assetBundles[HighlightLocalAsset::class]->css
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"toolbar":[["code-block"]]}});'
@@ -812,7 +828,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -827,7 +843,7 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 KatexAsset::class,
                 HighlightAsset::class,
@@ -835,7 +851,7 @@ class QuillTest extends TestCase
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"formula":true,"toolbar":[["code-block","formula"]]}});'
@@ -855,7 +871,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -871,7 +887,7 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 KatexLocalAsset::class,
                 HighlightLocalAsset::class,
@@ -879,7 +895,7 @@ class QuillTest extends TestCase
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"formula":true,"toolbar":[["code-block","formula"]]}});'
@@ -899,7 +915,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -916,7 +932,7 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 KatexLocalAsset::class,
                 HighlightLocalAsset::class,
@@ -925,7 +941,7 @@ class QuillTest extends TestCase
             ],
             array_keys(Yii::$app->view->assetBundles)
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",'
                 . '{"theme":"snow","modules":{"syntax":true,"formula":true,"smart-breaker":true,"toolbar":[["code-block","formula"]]}});'
@@ -945,7 +961,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="dynamicmodel-test" name="DynamicModel[test]">'
             . '<div id="editor-quill-0" style="min-height:150px;"></div>',
             (
@@ -957,8 +973,8 @@ class QuillTest extends TestCase
                 )
             )->run()
         );
-        $this->assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
-        $this->assertSame(
+        self::assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
@@ -977,7 +993,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
                 new Quill(
@@ -988,8 +1004,8 @@ class QuillTest extends TestCase
                 )
             )->run()
         );
-        $this->assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
-        $this->assertSame(
+        self::assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
+        self::assertSame(
             [
                 'var q_quill_0=new Quill("#editor-quill-0",{"theme":"snow","modules":{"toolbar":true}});'
                 . 'q_quill_0.on(\'text-change\',function(){'
@@ -1008,7 +1024,7 @@ class QuillTest extends TestCase
     {
         static::setApp();
 
-        $this->assertSame(
+        self::assertSame(
             '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0" style="min-height:150px;"></div>',
             (
             new Quill(
@@ -1019,8 +1035,8 @@ class QuillTest extends TestCase
             )
             )->run()
         );
-        $this->assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
-        $this->assertSame(
+        self::assertSame([QuillAsset::class], array_keys(Yii::$app->view->assetBundles));
+        self::assertSame(
             [
                 'var q_quill_0_icons=Quill.import(\'ui/icons\');'
                 . 'q_quill_0_icons[\'bold\']="<i class=\"fa fa-bold\" aria-hidden=\"true\"></i>";'
@@ -1030,6 +1046,58 @@ class QuillTest extends TestCase
             ],
             array_values(Yii::$app->view->js[View::POS_END])
         );
+        Yii::$app = null;
+    }
+
+    /**
+     * @test
+     * @throws InvalidConfigException
+     */
+    public function shouldWorkWithActiveField(): void
+    {
+        static::setApp();
+
+        self::assertSame(
+            '<div class="form-group field-dynamicmodel-test">
+<label class="control-label" for="dynamicmodel-test">Test</label>
+<input type="hidden" id="dynamicmodel-test" name="DynamicModel[test]"><div id="editor-quill-1" class="" style="min-height:150px;"></div>
+
+<div class="help-block"></div>
+</div>',
+            (new ActiveForm())
+                ->field(new DynamicModel(['test']), 'test')
+                ->widget(Quill::class)
+                ->render()
+        );
+
+        ob_get_clean();
+
+        Yii::$app = null;
+    }
+
+    /**
+     * @test
+     * @throws InvalidConfigException
+     */
+    public function shouldAddCssForResizing(): void
+    {
+        static::setApp();
+
+        self::assertSame(
+            '<input type="hidden" id="quill-0" name="test"><div id="editor-quill-0"></div>',
+            (
+            new Quill(
+                [
+                    'name' => 'test',
+                    'localAssets' => true,
+                    'allowResize' => true,
+                ]
+            )
+            )->run()
+        );
+
+        $css = array_values(Yii::$app->view->css);
+        self::assertSame('<style>.ql-editor{resize:vertical;overflow-y:scroll}</style>', $css[0]);
         Yii::$app = null;
     }
 }

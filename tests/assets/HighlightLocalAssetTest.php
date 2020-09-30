@@ -59,6 +59,6 @@ class HighlightLocalAssetTest extends TestCase
         $asset->style = $style;
         $asset->registerAssetFiles(Yii::$app->view);
 
-        $this->assertSame(['style' => $css], $asset->css);
+        self::assertSame(['style' => $css], $asset->css);
     }
 }

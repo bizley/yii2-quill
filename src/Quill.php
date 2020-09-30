@@ -32,7 +32,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 3.1.0
+ * @version 3.2.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
@@ -49,8 +49,8 @@ class Quill extends InputWidget
     public const TOOLBAR_BASIC = 'BASIC';
 
     public const QUILL_VERSION = '1.3.7';
-    public const KATEX_VERSION = '0.11.1';
-    public const HIGHLIGHTJS_VERSION = '9.18.1';
+    public const KATEX_VERSION = '0.12.0';
+    public const HIGHLIGHTJS_VERSION = '10.2.0';
 
     /** {@inheritdoc} */
     public static $autoIdPrefix = 'quill-';
@@ -183,12 +183,6 @@ class Quill extends InputWidget
     public $highlightStyle = 'default';
 
     /**
-     * @var array HTML attributes for the input tag (editor box).
-     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    public $options = ['style' => 'min-height:150px;'];
-
-    /**
      * @var array HTML attributes for the hidden input tag (field keeping raw HTML text).
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      * @since 2.5.0
@@ -206,6 +200,12 @@ class Quill extends InputWidget
      * @since 2.6.0
      */
     public $localAssets = false;
+
+    /**
+     * @var bool Whether to allow resizing the editor box.
+     * @since 3.2.0
+     */
+    public $allowResize = false;
 
     /** @var string ID of the editor */
     protected $_fieldId;
@@ -244,6 +244,10 @@ class Quill extends InputWidget
 
         $this->_fieldId = $this->options['id'];
         $this->options['id'] = 'editor-' . $this->id;
+
+        if (!$this->allowResize && !isset($this->options['style'])) {
+            $this->options['style'] = 'min-height:150px;';
+        }
 
         $this->prepareOptions();
     }
@@ -523,12 +527,28 @@ class Quill extends InputWidget
         return $this->toolbarOptions;
     }
 
+    private function removeFormControlClass(): void
+    {
+        if (isset($this->options['class'])) {
+            $oldClasses = explode(' ', $this->options['class']);
+            $newClasses = [];
+            foreach ($oldClasses as $class) {
+                if ($class !== 'form-control') {
+                    $newClasses[] = $class;
+                }
+            }
+            $this->options['class'] = implode(' ', $newClasses);
+        }
+    }
+
     /** {@inheritdoc} */
     public function run(): string
     {
         $this->registerClientScript();
 
         $hiddenOptions = array_merge($this->hiddenOptions, ['id' => $this->_fieldId]);
+
+        $this->removeFormControlClass();
 
         if ($this->hasModel()) {
             return Html::activeHiddenInput($this->model, $this->attribute, $hiddenOptions)
@@ -546,6 +566,10 @@ class Quill extends InputWidget
     public function registerClientScript(): void
     {
         $view = $this->view;
+
+        if ($this->allowResize) {
+            $view->registerCss('.ql-editor{resize:vertical;overflow-y:scroll}');
+        }
 
         if ($this->localAssets) {
             if ($this->isKatex()) {

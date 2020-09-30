@@ -21,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^3.1
+composer require bizley/quill:^3.2
 ```
 
 Or add the package to your `composer.json`:
@@ -29,7 +29,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^3.1"
+        "bizley/quill": "^3.2"
     }
 }
 ```
@@ -104,8 +104,9 @@ copied to hidden input field so it can be used in forms. You can modify containe
 
 ### Editor box's height
 
-Default editor height is *150px* (this can be changed by setting `'options'` parameter) and its box extends as new text 
-lines are added.
+When `allowResize` option is set to `false` (default) editor's height is *150px* (this can be changed by setting 
+`'options'` parameter). Setting `allowResize` to `true` resets the minimum height and allows it to be expanded freely. 
+Editor's box extends as new text lines are added.
 
 ### Quill source
 
@@ -169,7 +170,7 @@ the `'katexVersion'` parameter. Starting from version 3.0.0 you can use local as
 packet manager - to do so run
 
 ```
-composer require npm-asset/katex:^0.11
+composer require npm-asset/katex:^0.12
 ```
 
 Or add the package to your `composer.json`:
@@ -177,7 +178,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "npm-asset/katex": "^0.11"
+        "npm-asset/katex": "^0.12"
     }
 }
 ```
@@ -203,7 +204,7 @@ highlight.js by setting the `'highlightVersion'` parameter. Starting from versio
 highlight.js provided through NPM packet manager - to do so run
 
 ```
-composer require npm-asset/highlight.js:^9.18
+composer require npm-asset/highlight.js:^10.2
 ```
 
 Or add the package to your `composer.json`:
@@ -211,7 +212,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "npm-asset/highlight.js": "^9.18"
+        "npm-asset/highlight.js": "^10.2"
     }
 }
 ```
@@ -239,7 +240,7 @@ previous versions you would have to add it through custom JS (see `js` property)
 Run
 
 ```
-composer require npm-asset/quill-smart-break:^0.1
+composer require npm-asset/quill-smart-break:^0.2
 ```
 
 Or add the package to your `composer.json`:
@@ -247,7 +248,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "npm-asset/quill-smart-break": ">=0.1.1 <1.0.0"
+        "npm-asset/quill-smart-break": "^0.2"
     }
 }
 ```
