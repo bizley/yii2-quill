@@ -2,9 +2,6 @@ name: Tests
 
 on: [pull_request]
 
-env:
-  DEFAULT_COMPOSER_FLAGS: "--prefer-dist --no-interaction --no-progress --optimize-autoloader"
-
 jobs:
   phpunit:
     name: PHP ${{ matrix.php }}
@@ -12,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.1', '7.2', '7.3', '7.4']
+        php: ['7.1', '7.2', '7.3', '7.4', '8.0']
 
     steps:
       - name: Checkout
@@ -33,6 +30,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
       - name: Install dependencies
-        run: composer update $DEFAULT_COMPOSER_FLAGS
+        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader
       - name: PHP Unit tests
         run: vendor/bin/phpunit --verbose
