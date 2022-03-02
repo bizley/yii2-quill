@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0
       - name: Install PHP
-        uses: shivammathur/setup-php@2.17.0
+        uses: shivammathur/setup-php@2.17.1
         with:
           php-version: ${{ matrix.php }}
         env:
