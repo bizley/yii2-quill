@@ -23,7 +23,7 @@
     "npm-asset/quill": "^1.3",
     "npm-asset/quill-smart-break": "^0.2",
     "phpunit/phpunit": ">=7.5",
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-latest"
   },
   "suggest": {
     "npm-asset/highlight.js": "For local highlight.js assets",
