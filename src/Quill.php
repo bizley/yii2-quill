@@ -32,7 +32,7 @@ use yii\widgets\InputWidget;
  * See the documentation for more details.
  *
  * @author Paweł Bizley Brzozowski
- * @version 3.2.0
+ * @version 3.3.0
  * @license Apache 2.0
  * https://github.com/bizley/yii2-quill
  *
@@ -49,8 +49,8 @@ class Quill extends InputWidget
     public const TOOLBAR_BASIC = 'BASIC';
 
     public const QUILL_VERSION = '1.3.7';
-    public const KATEX_VERSION = '0.12.0';
-    public const HIGHLIGHTJS_VERSION = '10.2.0';
+    public const KATEX_VERSION = '0.15.2';
+    public const HIGHLIGHTJS_VERSION = '11.4.0';
 
     /** {@inheritdoc} */
     public static $autoIdPrefix = 'quill-';

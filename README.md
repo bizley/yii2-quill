@@ -21,7 +21,7 @@ You can find Quill at https://quilljs.com/
 Run console command
 
 ```
-composer require bizley/quill:^3.2
+composer require bizley/quill:^3.3
 ```
 
 Or add the package to your `composer.json`:
@@ -29,7 +29,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "bizley/quill": "^3.2"
+        "bizley/quill": "^3.3"
     }
 }
 ```
@@ -170,7 +170,7 @@ the `'katexVersion'` parameter. Starting from version 3.0.0 you can use local as
 packet manager - to do so run
 
 ```
-composer require npm-asset/katex:^0.12
+composer require npm-asset/katex:^0.15
 ```
 
 Or add the package to your `composer.json`:
@@ -178,7 +178,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "npm-asset/katex": "^0.12"
+        "npm-asset/katex": "^0.15"
     }
 }
 ```
@@ -204,7 +204,7 @@ highlight.js by setting the `'highlightVersion'` parameter. Starting from versio
 highlight.js provided through NPM packet manager - to do so run
 
 ```
-composer require npm-asset/highlight.js:^10.2
+composer require npm-asset/highlight.js:^11.4
 ```
 
 Or add the package to your `composer.json`:
@@ -212,7 +212,7 @@ Or add the package to your `composer.json`:
 ```json
 {
     "require": {
-        "npm-asset/highlight.js": "^10.2"
+        "npm-asset/highlight.js": "^11.4"
     }
 }
 ```
